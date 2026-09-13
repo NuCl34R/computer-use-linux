@@ -1,7 +1,7 @@
 {
   "date": "2026-09-13",
   "host": "SteamOS 3.8.26, KDE Wayland",
-  "installer_contract_tests": 9,
+  "installer_contract_tests": 10,
   "distribution_scenarios": 12,
   "launchers": {
     "launcher-native": {

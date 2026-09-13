@@ -163,6 +163,9 @@ def install(args, plan):
     launcher = args.bin_dir.expanduser().absolute() / NAME
     desktop = args.data_dir.expanduser().absolute() / "applications" / IDENTITY
     targets = [destination, launcher, desktop]
+    source = (ROOT / "skills" / NAME).resolve()
+    if any(p.resolve() == source or source in p.resolve().parents for p in targets):
+        raise RuntimeError("Choose installation paths outside the source skill directory")
     if any(p.is_symlink() for p in targets):
         raise RuntimeError("An installation target is a symlink; choose a regular destination")
     if any(p.exists() for p in targets) and not args.update:

@@ -122,6 +122,8 @@ If you install a second harness using the same launcher, use `--update`; the sha
 
 </details>
 
+A checksummed source archive is also available in the [0.1.0 preview release](https://github.com/NuCl34R/computer-use-linux/releases/tag/v0.1.0). Extract it and run `./install.sh` from its directory; the installer does not require Git metadata.
+
 ## Give your agent a desktop
 
 ### MCP: one server, your choice of harness
@@ -219,11 +221,12 @@ These are application-driven tests: actual GTK callbacks confirm text, clicks, s
 | Xvfb · rootless container | **Passed** | X11 input, capture and accessibility |
 | Qt + XWayland applications | **Passed** | kdialog and xterm with verified Unicode input |
 | Two monitors · 125% scaling | **Passed** | Input mapping on a scaled, offset second display |
+| Ubuntu 24.04 · private Sway + Xvfb | **Passed in GitHub Actions** | Full installed-skill MCP/GUI suites on an independent runner |
 | Installer | **Passed locally** | Distribution routing, rollback, quoted paths, update/removal, native installed E2E |
 | Omarchy workstation | **Pending** | Detection and Arch recipe implemented; physical machine test still required |
 | GNOME / other host DEs / other atomic OS images | **Not individually certified** | Private runtime offers a portable route; current-desktop APIs vary |
 
-The initial 13-report baseline also includes CLI transport, standalone skill installation, repeated accessibility-tree churn, and EOF/SIGTERM/SIGKILL cleanup. See [the validation record](docs/VALIDATION.md), [machine-readable baseline](skills/linux-computer-use/references/validation-results.json), and [CI runs](https://github.com/NuCl34R/computer-use-linux/actions).
+The initial 13-report baseline also includes CLI transport, standalone skill installation, repeated accessibility-tree churn, and EOF/SIGTERM/SIGKILL cleanup. See [the validation record](docs/VALIDATION.md), [machine-readable baseline](skills/linux-computer-use/references/validation-results.json), [verified Ubuntu CI record](docs/ci-validation.json), and [CI runs](https://github.com/NuCl34R/computer-use-linux/actions).
 
 <details>
 <summary><strong>Open the real application captures</strong></summary>

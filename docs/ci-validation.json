@@ -1,0 +1,70 @@
+{
+  "date": "2026-09-13",
+  "environment": "GitHub-hosted Ubuntu 24.04",
+  "commit": "f7096a6293f6214858f15452babe5f39430ec846",
+  "run": "https://github.com/NuCl34R/computer-use-linux/actions/runs/34777639989",
+  "results": {
+    "sway": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2\u00d7 screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "runtime_sha256": "1e507a9da0a130577a93160a42af1fbbd017109582dc4ed93dcf80605ff0ccca",
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 30.92,
+        "p95": 33.93,
+        "min": 16.28
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 78.52,
+        "max": 79.51
+      },
+      "server_returncode": 0,
+      "remaining_processes": []
+    },
+    "xvfb": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2\u00d7 screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "runtime_sha256": "1e507a9da0a130577a93160a42af1fbbd017109582dc4ed93dcf80605ff0ccca",
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 13.97,
+        "p95": 14.62,
+        "min": 13.46
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 75.8,
+        "max": 76.5
+      },
+      "server_returncode": 0,
+      "remaining_processes": []
+    }
+  }
+}

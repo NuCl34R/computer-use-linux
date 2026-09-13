@@ -85,6 +85,7 @@ Sans MCP, la CLI peut garder un contrôleur actif sur un socket Unix privé et r
 | Qt, XWayland, Unicode | Texte reçu et callbacks vérifiés |
 | Deux écrans, échelle 125 % | Coordonnées de clic vérifiées |
 | Arrêts, annulation, accessibilité instable | Nettoyage et contrats vérifiés |
+| Ubuntu 24.04 dans GitHub Actions | Suites complètes Sway et Xvfb réussies |
 | Installateur universel | Détection, chemins avec espaces, sauvegarde, rollback et installation indépendante |
 | Poste Omarchy physique | **À valider** |
 

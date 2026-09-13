@@ -133,6 +133,15 @@ class Installer(unittest.TestCase):
             self.assertTrue(pathlib.Path(result["skill"]).exists())
             self.assertTrue(launcher.exists())
 
+    def test_install_cannot_overwrite_or_recurse_into_source(self):
+        args = self.args(pathlib.Path("/tmp/cul-source-guard"))
+        args.update = True
+        for location in (i.ROOT / "skills", i.ROOT / "skills" / i.NAME / "nested"):
+            with self.subTest(location=location):
+                args.skills_dir = location
+                with self.assertRaisesRegex(RuntimeError, "outside the source"):
+                    i.install(args, self.plan())
+
     def test_container_launcher_uses_self_contained_wrapper(self):
         with tempfile.TemporaryDirectory() as directory:
             args = self.args(pathlib.Path(directory))

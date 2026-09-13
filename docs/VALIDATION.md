@@ -28,14 +28,14 @@ Six transport/input contract tests also passed. The runtime hash is recorded in 
 
 ## Universal installer validation
 
-The installer adds executable tests for twelve distro scenarios, immutable precedence, Omarchy/Hyprland detection, complete-native selection on SteamOS, incomplete KWin fallback, safe os-release parsing, quoted paths, transactional rollback, update backups, manifest-protected removal and the container launcher.
+The installer adds executable tests for twelve distro scenarios, immutable precedence, Omarchy/Hyprland detection, complete-native selection on SteamOS, incomplete KWin fallback, safe os-release parsing, quoted paths, transactional rollback, update backups, manifest-protected removal, source-directory protection and the container launcher.
 
 A fresh install into a separate directory on SteamOS passed the full native KWin E2E suite again: **2.08 ms** warm screenshot median and **52.85 ms** action-to-verified-image median in that run. These extra measurements are not substituted into the historical baseline.
 
 Both actual installed launchers also passed the GTK/MCP acceptance test: native
 KWin and rootless container Sway. See [installer results](installer-validation.json).
 
-The [GitHub Actions workflow](../.github/workflows/ci.yml) installs system libraries on Ubuntu 24.04, runs the installer/contracts/docs checks, installs a standalone skill and drives real private Sway and Xvfb sessions through MCP. Workflow results are available under [Actions](https://github.com/NuCl34R/computer-use-linux/actions). CI does not substitute for physical Omarchy validation.
+The [GitHub Actions workflow](../.github/workflows/ci.yml) installs system libraries on Ubuntu 24.04, runs the installer/contracts/docs checks, installs a standalone skill and drives real private Sway and Xvfb sessions through MCP. Workflow results are available under [Actions](https://github.com/NuCl34R/computer-use-linux/actions). The first corrected run passed on both Sway and Xvfb: [recorded CI evidence](ci-validation.json). CI does not substitute for physical Omarchy validation.
 
 ## Measurement method
 
