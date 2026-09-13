@@ -10,8 +10,8 @@ application control through the installed native KWin and container Sway
 launchers. Both launchers expose 20 tools, enter Unicode into a GTK field,
 verify the resulting screenshot and stop. The first container initialization
 attempt timed out; the subsequent full GUI run passed. The record retains that
-observation. Earlier reports below remain historical baselines; Omarchy
-workstation acceptance is still pending.
+observation. Earlier reports below remain historical baselines; physical workstation
+coverage depends on the configurations actually tested.
 
 ## Relative pointer input · September 13, 2026
 
@@ -59,7 +59,7 @@ A fresh install into a separate directory on SteamOS passed the full native KWin
 Both actual installed launchers also passed the GTK/MCP acceptance test: native
 KWin and rootless container Sway. See [installer results](installer-validation.json).
 
-The [GitHub Actions workflow](../.github/workflows/ci.yml) installs system libraries on Ubuntu 24.04, runs the installer/contracts/docs checks, installs a standalone skill and drives real private Sway and Xvfb sessions through MCP. Workflow results are available under [Actions](https://github.com/NuCl34R/computer-use-linux/actions). The first corrected run passed on both Sway and Xvfb: [recorded CI evidence](ci-validation.json). CI does not substitute for physical Omarchy validation.
+The [GitHub Actions workflow](../.github/workflows/ci.yml) installs system libraries on Ubuntu 24.04, runs the installer/contracts/docs checks, installs a standalone skill and drives real private Sway and Xvfb sessions through MCP. Workflow results are available under [Actions](https://github.com/NuCl34R/computer-use-linux/actions). The first corrected run passed on both Sway and Xvfb: [recorded CI evidence](ci-validation.json). CI does not substitute for testing a physical workstation’s compositor, GPU, scaling and applications.
 
 ## Measurement method
 
@@ -124,4 +124,10 @@ The container test shares only this repository as `/work`, runs with networking 
 
 The portal test did not control the physical desktop. GNOME, COSMIC, every atomic distribution and every compositor version are not individually tested. Private desktop portability relies on its own runtime; it is not uniform native support for every host window-manager API. Native window focus is implemented for KDE, Hyprland, Sway and X11. Screen topology is fixed at session start.
 
-Omarchy workstation acceptance is explicitly tracked in [its guide](OMARCHY.md).
+For a physical workstation, record the installer plan, `doctor` output,
+compositor and GPU versions, display resolutions/scales and application versions.
+Run the installed-launcher test above in a private desktop first and check that
+your own input and clipboard remain usable independently. Test the current
+desktop separately with a disposable application, verifying window discovery,
+screenshot coordinates, Unicode input, scrolling, dragging and input release
+after stopping. Record each mode as passed, failed or not tested.

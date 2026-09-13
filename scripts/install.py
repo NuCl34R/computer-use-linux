@@ -154,7 +154,7 @@ def make_plan(system, caps, requested="auto"):
         "compositor": compositor if runtime == "native" else "sway", "missing_native": missing,
         "dependency_command": dependency_command, "podman_available": bool(commands.get("podman")),
         "container_image": IMAGE if runtime == "container" else None,
-        "note": "Detection is not E2E certification. Omarchy workstation validation is pending."}
+        "note": "Detection is not E2E certification. Validate the selected runtime on your actual desktop."}
 
 
 def digest(path):

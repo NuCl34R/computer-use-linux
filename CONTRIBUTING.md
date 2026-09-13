@@ -51,4 +51,4 @@ python3 scripts/package.py --output dist
 
 The archive contains the installer, skill, tests and docs selected from tracked source files; it excludes Git metadata, raw local artifacts and environment files. It includes a per-file checksum manifest. The script checks that the archive can be read and its manifest verified. An archive should be extracted into a new directory and installed there before announcing a release.
 
-Public release remains a maintainer decision after Omarchy workstation validation. Creating a tag or release must not change repository visibility.
+Public release remains a maintainer decision informed by the documented compatibility results. Creating a tag or release must not change repository visibility.

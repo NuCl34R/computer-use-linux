@@ -11,7 +11,6 @@
   <a href="#start-in-two-minutes">Install</a> ·
   <a href="#give-your-agent-a-desktop">Connect your agent</a> ·
   <a href="#tested-on-real-desktops">Evidence</a> ·
-  <a href="docs/OMARCHY.md">Omarchy</a> ·
   <a href="docs/README.fr.md">Français</a>
 </p>
 
@@ -36,7 +35,7 @@ Its defining feature is a **private desktop**: the agent gets its own compositor
 </tr>
 </table>
 
-> **Preview, with real evidence.** The initial validation passed 13 E2E reports on SteamOS and private/containerized Linux desktops. The universal installer has additional tests. Validation on the intended **Omarchy workstation is still pending**. See the [support matrix](#tested-on-real-desktops) before choosing a mode.
+> **Preview, with real evidence.** The initial validation passed 13 E2E reports on SteamOS and private/containerized Linux desktops. The universal installer has additional tests. Desktop detection does not certify every physical workstation. See the [support matrix](#tested-on-real-desktops) before choosing a mode.
 
 ## Start in two minutes
 
@@ -67,8 +66,6 @@ Review the plan, then explicitly allow the displayed package installation:
 The package manager retains its normal confirmation prompt. On Arch/Omarchy, first bring the system up to date using your normal update procedure. The installer uses `pacman -S --needed`; it does not refresh sync databases, perform a partial upgrade or run a full OS upgrade for you.
 
 Package recipes cover `pacman`, `apt-get`, `dnf` and `zypper`. They provide native libraries and a Sway private-desktop fallback. Package availability varies by release; the installer probes again after installation and reports missing capabilities. These recipes are not a claim of E2E certification on every distribution.
-
-For Omarchy, start with [the dedicated workstation guide](docs/OMARCHY.md).
 
 </details>
 
@@ -223,7 +220,6 @@ These are application-driven tests: actual GTK callbacks confirm text, clicks, s
 | Two monitors · 125% scaling | **Passed** | Input mapping on a scaled, offset second display |
 | Ubuntu 24.04 · private Sway + Xvfb | **Passed in GitHub Actions** | Full installed-skill MCP/GUI suites on an independent runner |
 | Installer | **Passed locally** | Distribution routing, rollback, quoted paths, update/removal, native installed E2E |
-| Omarchy workstation | **Pending** | Detection and Arch recipe implemented; physical machine test still required |
 | GNOME / other host DEs / other atomic OS images | **Not individually certified** | Private runtime offers a portable route; current-desktop APIs vary |
 
 The initial 13-report baseline also includes CLI transport, standalone skill installation, repeated accessibility-tree churn, and EOF/SIGTERM/SIGKILL cleanup. See [the validation record](docs/VALIDATION.md), [machine-readable baseline](skills/linux-computer-use/references/validation-results.json), [verified Ubuntu CI record](docs/ci-validation.json), and [CI runs](https://github.com/NuCl34R/computer-use-linux/actions).
@@ -292,20 +288,19 @@ install.sh                         Universal local entry point
 scripts/install.py                 Detection, dependency plans, install/update/remove
 skills/linux-computer-use/         Self-contained skill + native runtime + container recipe
 tests/                             Real GUI tests and installer/transport contracts
-docs/                              Setup, Omarchy validation, evidence and visual assets
+docs/                              Setup, desktop validation, evidence and visual assets
 .github/                           CI, issue forms and contributor workflow
 ```
 
 | Continue here | |
 | :--- | :--- |
 | [Installation guide](docs/INSTALLATION.md) | Runtime choice, paths, containers and troubleshooting |
-| [Omarchy workstation guide](docs/OMARCHY.md) | First run and repeatable acceptance test |
 | [Validation record](docs/VALIDATION.md) | Evidence, methodology and reproducible commands |
 | [Contributing](CONTRIBUTING.md) | Development setup and meaningful test expectations |
 | [Security](SECURITY.md) | Permissions, isolation and vulnerability reporting |
 | [Changelog](CHANGELOG.md) | What ships in this preview |
 
-**Next milestone:** validate on the intended Omarchy workstation, record the results, then decide whether to make the repository public. A dedicated Omarchy integration is a later possibility, not part of the current installer.
+**Contribute compatibility results:** run the [desktop validation checks](docs/VALIDATION.md) and record your compositor, distribution, GPU, scaling and application versions. This project provides a standalone Linux skill and MCP runtime usable across agent harnesses.
 
 ## License
 

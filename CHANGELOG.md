@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Keep repository documentation focused on the standalone Linux skill. Replace
+  the dedicated Omarchy workstation guide and roadmap with general desktop
+  validation guidance; retain Arch/Hyprland environment detection.
+
 ## 0.1.1 — Preview — 2026-09-13
 
 - Store verified, private backup archives outside skill discovery directories;

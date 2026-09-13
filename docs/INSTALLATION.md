@@ -1,6 +1,6 @@
 # Installation guide
 
-[← Repository home](../README.md) · [Omarchy](OMARCHY.md) · [Agent instructions](../skills/linux-computer-use/SKILL.md)
+[← Repository home](../README.md) · [Agent instructions](../skills/linux-computer-use/SKILL.md)
 
 ## What the installer does
 

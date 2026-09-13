@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/hero.png" alt="Linux Computer Use — votre bureau, votre agent, en parallèle" width="100%"></p>
 
 <p align="center"><strong>Donnez à votre agent un vrai bureau Linux. Gardez le vôtre disponible.</strong></p>
-<p align="center"><a href="../README.md">English / Page principale</a> · <a href="INSTALLATION.md">Installation détaillée</a> · <a href="OMARCHY.md">Validation Omarchy</a> · <a href="VALIDATION.md">Preuves E2E</a></p>
+<p align="center"><a href="../README.md">English / Page principale</a> · <a href="INSTALLATION.md">Installation détaillée</a> · <a href="VALIDATION.md">Preuves E2E</a></p>
 
 ## Ce que fait le projet
 
@@ -9,7 +9,7 @@ Linux Computer Use est un skill autonome et un contrôleur natif pour les applic
 
 Son mode **bureau privé** crée un écran, un compositeur, un focus, un presse-papiers et des bus de session indépendants. L’agent peut travailler dans ses applications pendant que vous continuez à utiliser les vôtres. Le mode **bureau courant** lui permet plutôt d’agir dans les fenêtres déjà ouvertes, en partageant votre focus et votre curseur.
 
-Cette version `0.1.1` est une préversion : une base de treize rapports E2E passe sur SteamOS et dans de vrais bureaux privés/conteneurisés. **La validation du poste Omarchy est encore à faire.**
+Cette version `0.1.1` est une préversion : une base de treize rapports E2E passe sur SteamOS et dans de vrais bureaux privés/conteneurisés. La détection du bureau ne certifie pas toutes les configurations matérielles.
 
 ## Installer
 
@@ -87,7 +87,6 @@ Sans MCP, la CLI peut garder un contrôleur actif sur un socket Unix privé et r
 | Arrêts, annulation, accessibilité instable | Nettoyage et contrats vérifiés |
 | Ubuntu 24.04 dans GitHub Actions | Suites complètes Sway et Xvfb réussies |
 | Installateur universel | Détection, chemins avec espaces, sauvegarde, rollback et installation indépendante |
-| Poste Omarchy physique | **À valider** |
 
 Les captures réelles sont accessibles dans [la page principale](../README.md#tested-on-real-desktops). La bannière est une illustration générée ; elle n’est pas une preuve de fonctionnement.
 
@@ -109,6 +108,6 @@ Le bureau privé sépare l’affichage et l’entrée ; il ne constitue pas un b
 
 Utilisez le `frame_id` de la capture pour les coordonnées ; le contrôleur applique l’échelle. Redémarrez la session après un changement d’écrans. Après `stop`, démarrez un nouveau serveur pour une nouvelle session.
 
-Le dépôt reste privé jusqu’à la décision du propriétaire après l’essai Omarchy. Une intégration propre à Omarchy est une possibilité future.
+Ce projet fournit un skill Linux autonome et un serveur MCP utilisable avec différents agents. Les [tests de validation](VALIDATION.md) permettent de documenter les résultats sur chaque bureau et configuration. La publication relève du propriétaire du dépôt.
 
-[Installation](INSTALLATION.md) · [Omarchy](OMARCHY.md) · [Architecture](../skills/linux-computer-use/references/architecture.md) · [Contribution](../CONTRIBUTING.md) · [Sécurité](../SECURITY.md) · [Licence MIT](../LICENSE)
+[Installation](INSTALLATION.md) · [Architecture](../skills/linux-computer-use/references/architecture.md) · [Contribution](../CONTRIBUTING.md) · [Sécurité](../SECURITY.md) · [Licence MIT](../LICENSE)
