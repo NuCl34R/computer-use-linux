@@ -3,6 +3,8 @@ import json
 import os
 import sys
 import gi
+# Debian/Ubuntu split this GI bridge from python3-cairo. Fail before reporting readiness.
+gi.require_foreign("cairo")
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib
 

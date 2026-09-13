@@ -18,7 +18,7 @@ NAME = "linux-computer-use"
 IDENTITY = "local.linuxcomputeruse.Controller.desktop"
 IMAGE = "localhost/linux-computer-use:0.1.0"
 PACKAGES = {
-    "apt-get": "python3 python3-gi python3-dbus python3-cairo gir1.2-gtk-3.0 gir1.2-atspi-2.0 gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-pipewire at-spi2-core dbus-daemon libxkbcommon0 libxtst6 sway xwayland x11-xkb-utils".split(),
+    "apt-get": "python3 python3-gi python3-gi-cairo python3-dbus python3-cairo gir1.2-gtk-3.0 gir1.2-atspi-2.0 gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-pipewire at-spi2-core dbus-daemon libxkbcommon0 libxtst6 sway xwayland x11-xkb-utils".split(),
     "pacman": "python python-gobject python-dbus python-cairo gtk3 at-spi2-core gstreamer gst-plugins-base gst-plugins-good gst-plugin-pipewire dbus libxkbcommon libxtst sway xorg-xwayland xkeyboard-config".split(),
     "dnf": "python3 python3-gobject python3-dbus python3-cairo gtk3 at-spi2-core gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good pipewire-gstreamer dbus-daemon libxkbcommon libXtst sway xorg-x11-server-Xwayland xkeyboard-config".split(),
     "zypper": "python3 python3-gobject python3-gobject-Gdk python3-dbus-python python3-cairo typelib-1_0-Gtk-3_0 typelib-1_0-Atspi-2_0 typelib-1_0-Gst-1_0 typelib-1_0-GstVideo-1_0 gstreamer-plugins-base gstreamer-plugins-good pipewire-spa-plugins-0_2 gstreamer-plugin-pipewire at-spi2-core dbus-1 libxkbcommon0 libXtst6 sway xwayland xkeyboard-config".split(),

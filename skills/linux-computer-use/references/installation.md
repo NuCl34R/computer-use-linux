@@ -27,8 +27,8 @@ Typical package names on a mutable Debian/Ubuntu system are `python3-gi
 python3-dbus gir1.2-gtk-3.0 gir1.2-atspi-2.0 gir1.2-gst-plugins-base-1.0
 gir1.2-gstreamer-1.0 gstreamer1.0-pipewire gstreamer1.0-plugins-base at-spi2-core`.
 Arch uses `python-gobject python-dbus gtk3 at-spi2-core gstreamer
-gst-plugins-base gst-plugin-pipewire`. `python3-cairo`/`python-cairo` is needed
-for the test application's custom drawing, not for the runtime's capture code.
+gst-plugins-base gst-plugin-pipewire`. `python3-cairo` plus `python3-gi-cairo` on Debian/Ubuntu, or `python-cairo`
+on Arch, is needed for the test application's custom drawing, not for the runtime's capture code.
 
 ## Install the portable skill
 
