@@ -1,0 +1,28 @@
+name: Desktop or installation bug
+description: Report reproducible behavior with environment details.
+title: "[Bug]: "
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Distro/version, DE/compositor version, Wayland/X11, native/container, GPU if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps and observed behavior
+      description: Include the application and whether this is a private or current desktop. What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Relevant doctor and install.sh --dry-run output, test report, and reviewed logs/screenshots. Remove private application content first.
+  - type: textarea
+    id: regression
+    attributes:
+      label: Last working version
+      description: Commit or image digest, if known.

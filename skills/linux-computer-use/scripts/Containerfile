@@ -1,0 +1,12 @@
+FROM docker.io/library/archlinux:base@sha256:522dd24e4a16f41afe71c7561febe519f7575404c291565e9f0be823d1794ca4
+RUN pacman-key --init && pacman-key --populate archlinux \
+    && pacman -Syu --noconfirm --needed python python-gobject python-dbus python-cairo \
+    gtk3 at-spi2-core gstreamer gst-plugins-base gst-plugins-good gst-plugin-pipewire \
+    dbus kwin wireplumber hyprland sway xorg-server-xvfb xorg-xauth openbox \
+    ttf-dejavu mesa libxtst xkeyboard-config xterm kdialog \
+    && setcap -r /usr/bin/sway && setcap -r /usr/bin/kwin_wayland \
+    && pacman -Scc --noconfirm
+COPY . /opt/cul/
+ENV CUL_DEFAULT_COMPOSITOR=sway CUL_PRIVATE_HOME=1 PYTHONDONTWRITEBYTECODE=1
+WORKDIR /work
+CMD ["python3", "/opt/cul/cul.py", "mcp"]

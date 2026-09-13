@@ -1,0 +1,60 @@
+name: Linux desktop tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: desktop-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  desktop:
+    name: Ubuntu 24.04 / ${{ matrix.compositor }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        compositor: [sway, xvfb]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install distribution libraries and test applications
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-gi python3-dbus python3-cairo \
+            gir1.2-gtk-3.0 gir1.2-atspi-2.0 gir1.2-gstreamer-1.0 \
+            gir1.2-gst-plugins-base-1.0 gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good gstreamer1.0-pipewire at-spi2-core \
+            dbus-daemon libxkbcommon0 libxtst6 sway xvfb xauth openbox \
+            xwayland x11-xkb-utils fonts-dejavu-core
+      - name: Contracts, installer routing and documentation links
+        run: |
+          python3 tests/contracts.py
+          python3 tests/installer.py
+          python3 scripts/check_docs.py
+          python3 -m compileall -q scripts skills tests
+          sh -n install.sh scripts/container-run.sh skills/linux-computer-use/scripts/container-run.sh
+      - name: Install a standalone skill
+        run: |
+          ./install.sh --runtime native \
+            --skills-dir "$RUNNER_TEMP/cul/skills" \
+            --bin-dir "$RUNNER_TEMP/cul/bin" \
+            --data-dir "$RUNNER_TEMP/cul/share" > install-report.json
+      - name: Drive a real private desktop through MCP
+        env:
+          CUL_TEST_ENTRY: ${{ runner.temp }}/cul/skills/linux-computer-use/scripts/cul.py
+        run: python3 -u tests/e2e.py --compositor '${{ matrix.compositor }}' --output artifacts/ci-${{ matrix.compositor }}
+      - name: Validate the distributable archive
+        run: python3 scripts/package.py --output dist
+      - name: Retain test evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: desktop-${{ matrix.compositor }}-${{ github.sha }}
+          path: |
+            artifacts/
+            install-report.json
+            dist/
+          retention-days: 14

@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+core
+core.*
+.venv/
+artifacts/
+dist/
+.codex/
+.agents/
+.env
+.env.*
+*.sock

@@ -1,0 +1,15 @@
+name: Capability request
+description: Propose a concrete desktop workflow or portability improvement.
+body:
+  - type: textarea
+    id: workflow
+    attributes:
+      label: What should an agent be able to do?
+      description: Describe the actual user workflow and environment.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Relevant protocols or upstream references
+      description: Link primary documentation or describe what you have already tried.

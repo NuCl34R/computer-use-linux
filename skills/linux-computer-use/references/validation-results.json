@@ -1,0 +1,345 @@
+{
+  "date": "2026-09-13",
+  "host": "SteamOS 3.8.26 (build 20260827.1), KWin 6.4.3, Python 3.13.5",
+  "container_image_id_and_bytes": "f524633ebd8a203ac1d80eb0e62d37f95d2f480f1a186160cd0dcfb0f127112d 2483132433",
+  "container_versions": [
+    "python 3.14.7-1",
+    "gtk3 1:3.24.52-1",
+    "kwin 6.7.5-1",
+    "hyprland 0.56.2-3",
+    "sway 1:1.12-4",
+    "gstreamer 1.28.7-1",
+    "libpipewire 1:1.6.8-1",
+    "gdk-pixbuf2 2.44.7-1"
+  ],
+  "results": {
+    "e2e-kwin": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 2.13,
+        "p95": 2.47,
+        "min": 2.0
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 53.83,
+        "max": 61.14
+      },
+      "server_returncode": 0,
+      "source_report": "artifacts/e2e-kwin/report.json"
+    },
+    "e2e-portal": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "RemoteDesktop portal consent under the correct identity on an owned private desktop",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 2.15,
+        "p95": 2.34,
+        "min": 2.04
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 53.07,
+        "max": 53.32
+      },
+      "server_returncode": 0,
+      "runtime_sha256": "1e507a9da0a130577a93160a42af1fbbd017109582dc4ed93dcf80605ff0ccca",
+      "source_report": "artifacts/e2e-portal/report.json"
+    },
+    "e2e-hyprland": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 32.14,
+        "p95": 34.03,
+        "min": 16.45
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 55.77,
+        "max": 62.71
+      },
+      "server_returncode": 0,
+      "runtime_sha256": "1e507a9da0a130577a93160a42af1fbbd017109582dc4ed93dcf80605ff0ccca",
+      "source_report": "artifacts/e2e-hyprland/report.json"
+    },
+    "e2e-sway": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 16.15,
+        "p95": 32.1,
+        "min": 15.68
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 50.44,
+        "max": 59.44
+      },
+      "server_returncode": 0,
+      "source_report": "artifacts/e2e-sway/report.json"
+    },
+    "e2e-xvfb": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 16.46,
+        "p95": 17.0,
+        "min": 15.8
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 50.2,
+        "max": 50.55
+      },
+      "server_returncode": 0,
+      "source_report": "artifacts/e2e-xvfb/report.json"
+    },
+    "native-apps": {
+      "status": "passed",
+      "checks": [
+        "Native Qt Wayland dialog: Unicode input, AT-SPI OK, exact returned text",
+        "XWayland xterm: clipboard bridge, keyboard Enter, exact Unicode consumed on stdin"
+      ],
+      "source_report": "artifacts/native-apps/report.json"
+    },
+    "multimonitor": {
+      "status": "passed",
+      "checks": [
+        "Two real outputs enumerated",
+        "Fractional physical/logical/image dimensions",
+        "Screenshot pixel click reached the second output at global x=1280"
+      ],
+      "source_report": "artifacts/multimonitor/report.json"
+    },
+    "lifecycle": {
+      "status": "passed",
+      "checks": [
+        {
+          "termination": "eof",
+          "owned_pids": [
+            214580,
+            214581,
+            214582,
+            214583,
+            214584,
+            214590,
+            214591,
+            214726
+          ],
+          "remaining_running": []
+        },
+        {
+          "termination": "term",
+          "owned_pids": [
+            214749,
+            214750,
+            214751,
+            214752,
+            214753,
+            214759,
+            214760,
+            214882
+          ],
+          "remaining_running": []
+        },
+        {
+          "termination": "kill",
+          "owned_pids": [
+            214892,
+            214893,
+            214894,
+            214895,
+            214896,
+            214902,
+            214903,
+            215025
+          ],
+          "remaining_running": []
+        }
+      ],
+      "source_report": "artifacts/lifecycle/report.json"
+    },
+    "cli": {
+      "status": "passed",
+      "checks": [
+        "Unix socket mode 0600",
+        "CLI JSON-file literal Unicode input",
+        "Observed application callback",
+        "Image exported and base64 omitted",
+        "Stop removes socket and exits cleanly"
+      ],
+      "source_report": "artifacts/cli/report.json"
+    },
+    "installed-skill": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 2.12,
+        "p95": 2.63,
+        "min": 1.93
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 169.22,
+        "max": 267.51
+      },
+      "server_returncode": 0,
+      "runtime_sha256": "1e507a9da0a130577a93160a42af1fbbd017109582dc4ed93dcf80605ff0ccca",
+      "source_report": "artifacts/installed-skill/report.json"
+    },
+    "container-sway": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 25.76,
+        "p95": 32.61,
+        "min": 15.82
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 52.8,
+        "max": 60.98
+      },
+      "server_returncode": 0,
+      "runtime_sha256": "1e507a9da0a130577a93160a42af1fbbd017109582dc4ed93dcf80605ff0ccca",
+      "source_report": "artifacts/container-sway/report.json"
+    },
+    "container-xvfb": {
+      "status": "passed",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 17.02,
+        "p95": 18.17,
+        "min": 16.36
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 49.87,
+        "max": 50.59
+      },
+      "server_returncode": 0,
+      "runtime_sha256": "1e507a9da0a130577a93160a42af1fbbd017109582dc4ed93dcf80605ff0ccca",
+      "source_report": "artifacts/container-xvfb/report.json"
+    },
+    "accessibility-stress": {
+      "status": "passed",
+      "application_lifecycles": 20,
+      "snapshots": 80,
+      "source_report": "artifacts/accessibility-stress/report.json"
+    }
+  }
+}
