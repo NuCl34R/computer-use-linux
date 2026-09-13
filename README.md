@@ -24,7 +24,7 @@
 
 ---
 
-An AI agent should be able to use Linux applications through the same interface you do. **Linux Computer Use** gives it a persistent native desktop connection, visual observations, semantic accessibility actions, and precise input through **19 tools shared by MCP and a JSON CLI**.
+An AI agent should be able to use Linux applications through the same interface you do. **Linux Computer Use** gives it a persistent native desktop connection, visual observations, semantic accessibility actions, and precise input through **20 tools shared by MCP and a JSON CLI**.
 
 Its defining feature is a **private desktop**: the agent gets its own compositor, screen, input, clipboard, and session bus. You keep working on your desktop while it works in its own applications. For tasks in your existing windows, switch to current-desktop mode.
 
@@ -165,7 +165,7 @@ Choose an application installed in the selected runtime. Reusing a running singl
 | Session | `doctor`, `start_session`, `stop` |
 | Observation | `get_state`, `screenshot`, `list_apps`, `list_windows` |
 | Applications | `launch_app`, `focus_window` |
-| Pointer | `move`, `click`, `scroll`, `drag` |
+| Pointer | `move`, `move_relative`, `click`, `scroll`, `drag` |
 | Keyboard | `press_key`, `type_text` |
 | Accessibility | `focus_element`, `perform_action`, `set_value` |
 | Coordination | `batch` |
@@ -272,7 +272,7 @@ These measurements characterize this implementation on that machine. **macOS/Win
 - **Lifecycle:** serialized actions, cancellation, input release and an independent guardian for controller-owned processes.
 - **Transport:** stdio and same-user Unix sockets. No TCP listener or model-provider dependency.
 
-[Architecture and upstream sources →](skills/linux-computer-use/references/architecture.md)
+[Architecture and native protocols →](skills/linux-computer-use/references/architecture.md)
 
 ## Know the boundaries
 
@@ -304,14 +304,11 @@ docs/                              Setup, Omarchy validation, evidence and visua
 | [Contributing](CONTRIBUTING.md) | Development setup and meaningful test expectations |
 | [Security](SECURITY.md) | Permissions, isolation and vulnerability reporting |
 | [Changelog](CHANGELOG.md) | What ships in this preview |
-| [Visual identity](docs/assets/PROMPTS.md) | Asset provenance and generation prompt |
 
 **Next milestone:** validate on the intended Omarchy workstation, record the results, then decide whether to make the repository public. A dedicated Omarchy integration is a later possibility, not part of the current installer.
 
-## Credits & license
+## License
 
-The original implementation was informed by Linux platform documentation and exploration of [TGYD-helige/pi-computer-use](https://github.com/TGYD-helige/pi/tree/master/packages/pi-computer-use) and [agent-sh/computer-use-linux](https://github.com/agent-sh/computer-use-linux). Their drivers are not redistributed here. Native libraries are provided by their respective upstream projects and distributions.
-
-Code and documentation are licensed under [MIT](LICENSE). The masthead was generated for this project; [asset provenance](docs/assets/PROMPTS.md) is included.
+Code and documentation are licensed under [MIT](LICENSE). Native runtime libraries are supplied by the operating system.
 
 <p align="center"><sub>OPEN PROTOCOLS / LOCAL CONTROL / YOUR DESKTOP, IN PARALLEL.</sub></p>

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Native `move_relative` input for locked-pointer 3D cameras on KWin, wlroots,
+  X11 and RemoteDesktop portals; twenty shared tools.
+- Relative-pointer validation through native GTK callbacks on four backends,
+  with input contracts and installed-launcher coverage.
+
 ## 0.1.0 — Preview — 2026-09-13
 
 ### Native desktop runtime

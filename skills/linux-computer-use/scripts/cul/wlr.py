@@ -209,6 +209,10 @@ class Wlr:
         self.wl.send(self.pointer, 4)
         (self.pressed.add if down else self.pressed.discard)(("button", code))
 
+    def move_relative(self, dx, dy):
+        self.wl.send(self.pointer, 0, uint(self.timestamp()) + fixed(dx, dy))
+        self.wl.send(self.pointer, 4)
+
     def key(self, code, down):
         self.wl.send(self.keyboard, 1, uint(self.timestamp(), code, int(down)))
         (self.pressed.add if down else self.pressed.discard)(("key", code))

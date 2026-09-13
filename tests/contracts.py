@@ -25,6 +25,14 @@ class Contracts(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "No active session"):
             Engine().dispatch("click", {"x": 2, "y": 2})
 
+    def test_relative_motion_validates_before_backend(self):
+        engine = Engine()
+        for dx, dy in [(True, 0), (float('inf'), 0), (0, float('nan')), (10001, 0)]:
+            with self.assertRaises(ValueError):
+                engine.move_relative(dx, dy)
+        with self.assertRaises(ValueError):
+            validate({'dx': 1, 'dy': 2, 'frame_id': 'not-a-coordinate'}, TOOLS['move_relative'][1])
+
     def test_stop_is_idempotent_but_session_cannot_restart(self):
         engine = Engine()
         self.assertTrue(engine.dispatch("stop")["stopped"])
@@ -55,7 +63,7 @@ class Contracts(unittest.TestCase):
         answers = [json.loads(line) for line in process.stdout.splitlines()]
         self.assertEqual(process.returncode, 0, process.stderr)
         self.assertIn("error", answers[0])
-        self.assertEqual(len(answers[2]["result"]["tools"]), 19)
+        self.assertEqual(len(answers[2]["result"]["tools"]), 20)
 
 
 if __name__ == "__main__":

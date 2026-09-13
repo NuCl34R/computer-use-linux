@@ -59,6 +59,7 @@ class X11:
         self.x.XSetErrorHandler.argtypes = [C.CFUNCTYPE(I, P, P)]
         self.x.XSetErrorHandler(_ERROR_HANDLER)
         for name, args in (("XTestFakeMotionEvent", [P, I, I, I, U]),
+                           ("XTestFakeRelativeMotionEvent", [P, I, I, U]),
                            ("XTestFakeButtonEvent", [P, C.c_uint, I, U]),
                            ("XTestFakeKeyEvent", [P, C.c_uint, I, U])):
             getattr(self.xtest, name).argtypes = args
@@ -101,6 +102,10 @@ class X11:
 
     def move(self, x, y, display=0):
         self.xtest.XTestFakeMotionEvent(self.display, self.screen, round(x), round(y), 0)
+        self.sync()
+
+    def move_relative(self, dx, dy):
+        self.xtest.XTestFakeRelativeMotionEvent(self.display, round(dx), round(dy), 0)
         self.sync()
 
     def button(self, code, down):

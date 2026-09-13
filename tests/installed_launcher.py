@@ -32,7 +32,7 @@ def main():
     report = {"runtime": args.runtime, "status": "failed", "checks": []}
     try:
         client.request("initialize", {"protocolVersion": "2025-06-18", "clientInfo": {"name": "installed-launcher-e2e", "version": "1"}, "capabilities": {}})
-        assert len(client.request("tools/list")["tools"]) == 19
+        assert len(client.request("tools/list")["tools"]) == 20
         session = client.tool("start_session", {"mode": "isolated"})
         report["backend"] = session["backend"]
         app = client.tool("launch_app", {"argv": ["python3", str(fixture), str(remote_state)]})
@@ -55,7 +55,7 @@ def main():
         after = client.tool("screenshot", {"format": "png"})["image"]
         assert after["sha256"] != before["sha256"] and after["after_action_frame"]
         (output / "after.png").write_bytes(base64.b64decode(after["data"]))
-        report["checks"] = ["Actual installed launcher initializes MCP", "19 tools discovered", "Owned private desktop starts", "Native GTK callback confirms exact Unicode input", "Screenshot changed after acknowledged input"]
+        report["checks"] = ["Actual installed launcher initializes MCP", "20 tools discovered", "Owned private desktop starts", "Native GTK callback confirms exact Unicode input", "Screenshot changed after acknowledged input"]
         client.tool("stop")
         client.close()
         assert client.process.returncode == 0, client.process.returncode

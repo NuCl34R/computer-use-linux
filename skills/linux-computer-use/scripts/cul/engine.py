@@ -237,6 +237,14 @@ class Engine:
         self.last_action = time.monotonic()
         return {"x": x, "y": y, "display": display}
 
+    def move_relative(self, dx, dy):
+        number(dx, "dx", -10000, 10000)
+        number(dy, "dy", -10000, 10000)
+        self.backend.move_relative(dx, dy)
+        self.backend.sync()
+        self.last_action = time.monotonic()
+        return {"dx": dx, "dy": dy, "relative": True}
+
     def click(self, x=None, y=None, display=0, frame_id=None, button="left", count=1, token=None):
         if token:
             if x is not None or y is not None:
@@ -331,7 +339,7 @@ class Engine:
     def batch(self, actions, screenshot=True, display=0):
         if not isinstance(actions, list) or not 1 <= len(actions) <= 64:
             raise ValueError("A batch contains 1..64 actions")
-        allowed = {"click", "move", "press_key", "type_text", "scroll", "drag", "perform_action", "set_value", "focus_element", "focus_window"}
+        allowed = {"click", "move", "move_relative", "press_key", "type_text", "scroll", "drag", "perform_action", "set_value", "focus_element", "focus_window"}
         # Validate shape for the whole batch before causing any effects.
         for action in actions:
             if not isinstance(action, dict) or set(action) - {"tool", "arguments"} or action.get("tool") not in allowed or not isinstance(action.get("arguments", {}), dict):
@@ -404,6 +412,7 @@ TOOLS = {
     "focus_window": ("Activate a window id returned by list_windows.", schema({"window_id": S}, ["window_id"]), False),
     "focus_element": ("Focus an observed accessible element.", schema({"token": S}, ["token"]), False),
     "move": ("Move pointer. Use frame_id for screenshot pixel coordinates; otherwise use display-relative logical pixels.", schema(COORDS, ["x", "y"]), False),
+    "move_relative": ("Send relative pointer motion, including locked-pointer 3D views. dx/dy are native logical deltas, independent of screenshots; positive is right/down. Focus the intended app first.", schema({"dx": N, "dy": N}, ["dx", "dy"]), False),
     "click": ("Click a coordinate or invoke the semantic action of an observed token. Double/triple clicks use count.", schema(COORDS | {"token": S, "button": {"enum": list(BUTTONS)}, "count": I}), False),
     "press_key": ("Press a key/chord, e.g. Ctrl+a, Enter, Shift+Tab. Use type_text for literal Unicode.", schema({"key": S}, ["key"]), False),
     "type_text": ("Type literal Unicode into the focused field; clipboard transfer when available. paste_key can be Ctrl+Shift+v for terminals.", schema({"text": S, "paste_key": S}, ["text"]), False),

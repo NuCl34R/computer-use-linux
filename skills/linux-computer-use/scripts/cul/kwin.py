@@ -45,6 +45,9 @@ class KWinPrivate:
     def move(self, x, y, display=0):
         self.wl.send(self.input, 9, fixed(x, y))
 
+    def move_relative(self, dx, dy):
+        self.wl.send(self.input, 1, fixed(dx, dy))
+
     def button(self, code, down):
         self.wl.send(self.input, 2, uint(code, int(down)))
         if down:

@@ -149,6 +149,10 @@ class Portal:
         self.remote.NotifyPointerMotionAbsolute(self.session, {}, dbus.UInt32(self.displays[display]["node"]),
                                                 float(x), float(y), timeout=3)
 
+    def move_relative(self, dx, dy):
+        self.check()
+        self.remote.NotifyPointerMotion(self.session, {}, float(dx), float(dy), timeout=3)
+
     def button(self, code, down):
         self.check()
         self.remote.NotifyPointerButton(self.session, {}, dbus.Int32(code), dbus.UInt32(down), timeout=3)

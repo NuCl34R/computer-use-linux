@@ -1,0 +1,141 @@
+{
+  "date": "2026-09-13",
+  "host": "SteamOS 3.8.26 / KWin 6.4.3",
+  "physical_desktop_controlled": false,
+  "backend_regressions": {
+    "kwin": {
+      "status": "passed",
+      "runtime_sha256": "373dcfae26610e69cbb2426f5a98a2776f75f09dae139d45c4d9d50a25e41fb5",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Relative pointer motion confirmed by native GTK callback",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 3.49,
+        "p95": 3.85,
+        "min": 3.41
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 60.9,
+        "max": 62.25
+      },
+      "server_returncode": 0,
+      "remaining_processes": []
+    },
+    "sway": {
+      "status": "passed",
+      "runtime_sha256": "373dcfae26610e69cbb2426f5a98a2776f75f09dae139d45c4d9d50a25e41fb5",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Relative pointer motion confirmed by native GTK callback",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 32.08,
+        "p95": 33.05,
+        "min": 27.66
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 56.97,
+        "max": 57.11
+      },
+      "server_returncode": 0,
+      "remaining_processes": []
+    },
+    "xvfb": {
+      "status": "passed",
+      "runtime_sha256": "373dcfae26610e69cbb2426f5a98a2776f75f09dae139d45c4d9d50a25e41fb5",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Relative pointer motion confirmed by native GTK callback",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 28.3,
+        "p95": 28.89,
+        "min": 27.9
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 56.65,
+        "max": 57.23
+      },
+      "server_returncode": 0,
+      "remaining_processes": []
+    },
+    "portal": {
+      "status": "passed",
+      "runtime_sha256": "373dcfae26610e69cbb2426f5a98a2776f75f09dae139d45c4d9d50a25e41fb5",
+      "checks": [
+        "MCP initialization, tool discovery, typed image blocks",
+        "RemoteDesktop portal consent under the correct identity on an owned private desktop",
+        "Native window discovery/focus and AT-SPI editable field",
+        "Real UTF-8 keyboard paste and Ctrl+A replacement",
+        "Pixel click/double-click through 2× screenshot coordinate mapping",
+        "Pointer drag with native press/motion/release callbacks",
+        "Relative pointer motion confirmed by native GTK callback",
+        "Real scroll adjustment changed",
+        "Focus-free semantic button/text actions; stale element rejected",
+        "Invalid bounds, stale frame and invalid duration rejected",
+        "Serialized batch and visibly changed post-action screenshot",
+        "Five acknowledged GUI actions each produced a fresh, changed screenshot",
+        "MCP cancellation releases a held drag button",
+        "Owned compositor, buses, services and application cleaned up"
+      ],
+      "screenshot_roundtrip_ms": {
+        "samples": 30,
+        "median": 3.59,
+        "p95": 4.06,
+        "min": 3.45
+      },
+      "action_to_verified_screenshot_ms": {
+        "samples": 5,
+        "median": 62.61,
+        "max": 77.51
+      },
+      "server_returncode": 0,
+      "remaining_processes": []
+    }
+  },
+  "contracts": {
+    "passed": true,
+    "tests": 7
+  },
+  "tool": "move_relative"
+}

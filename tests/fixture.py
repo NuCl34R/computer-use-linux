@@ -9,7 +9,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib
 
 destination = sys.argv[1]
-state = {"text": "", "clicks": 0, "scroll": 0, "drag": None, "pointer_down": False, "keys": [], "ready": False}
+state = {"text": "", "clicks": 0, "scroll": 0, "drag": None, "motion": None, "pointer_down": False, "keys": [], "ready": False}
 
 
 def record(**values):
@@ -73,6 +73,7 @@ def draw(w, cr):
 
 
 canvas.connect("draw", draw)
+canvas.connect("motion-notify-event", lambda w, e: record(motion=[e.x, e.y]))
 canvas.connect("button-press-event", lambda w, e: (start.append([e.x, e.y]), record(pointer_down=True), False)[-1])
 canvas.connect("button-release-event", lambda w, e: record(pointer_down=False, drag={"start": start[-1], "end": [e.x, e.y]}) if start else None)
 box.pack_start(canvas, False, False, 0)

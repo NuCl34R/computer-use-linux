@@ -180,7 +180,7 @@ def run(args):
             "clientInfo": {"name": "cul-e2e", "version": "1"}})
         client.send({"jsonrpc": "2.0", "method": "notifications/initialized"})
         tools = client.request("tools/list")["tools"]
-        assert len(tools) == 19
+        assert len(tools) == 20
         checks.append("MCP initialization, tool discovery, typed image blocks")
         session = client.tool("start_session", {"mode": "current" if private else args.mode,
             "backend": "portal" if private else "auto", "compositor": args.compositor})
@@ -238,6 +238,15 @@ def run(args):
         drag = wait_state(fixture, lambda s: s["drag"] is not None)["drag"]
         assert drag["end"][0] - drag["start"][0] > 250, drag
         checks.append("Pointer drag with native press/motion/release callbacks")
+        client.tool("move", {"x": gx, "y": gy, "frame_id": small["frame_id"]})
+        time.sleep(.08)
+        origin_motion = json.loads(fixture.read_text())["motion"]
+        assert origin_motion is not None
+        client.tool("move_relative", {"dx": 40, "dy": 10})
+        relative = wait_state(fixture, lambda s: s["motion"] != origin_motion)["motion"]
+        assert abs(relative[0] - origin_motion[0] - 40) < 2, (origin_motion, relative)
+        assert abs(relative[1] - origin_motion[1] - 10) < 2, (origin_motion, relative)
+        checks.append("Relative pointer motion confirmed by native GTK callback")
         client.tool("scroll", {"x": gx, "y": gy + 100, "dy": 90, "frame_id": small["frame_id"]})
         wait_state(fixture, lambda s: s["scroll"] > 0)
         checks.append("Real scroll adjustment changed")

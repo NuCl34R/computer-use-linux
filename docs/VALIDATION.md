@@ -2,9 +2,22 @@
 
 [← Repository home](../README.md) · [French detailed baseline](../skills/linux-computer-use/references/validation.md)
 
+## Relative pointer input · September 13, 2026
+
+The `move_relative` addition passed the native GTK/MCP acceptance suite on
+private KWin, rootless container Sway, rootless container Xvfb and a KDE portal
+controlling an owned private KWin desktop. Each suite observed native motion
+callbacks, exercised the existing input and capture tools, and confirmed cleanup
+of owned processes. Seven input/transport contract tests and the installed native
+launcher test also passed. No additional Hyprland run is claimed for this change.
+
+The [structured runtime results](relative-pointer-validation.json) retain the
+runtime hash, assertions and measurements. These runs used the same GTK fixture
+and timing method as the baseline below; they did not control the physical desktop.
+
 ## Initial Linux baseline · September 13, 2026
 
-All **13 required reports passed**. The [machine-readable record](../skills/linux-computer-use/references/validation-results.json) retains assertions, timings, runtime versions and the image ID. Raw local logs, bus identifiers and temporary process paths are kept in ignored `artifacts/`; reviewed GUI captures are included under [visual assets](assets/PROMPTS.md).
+All **13 required reports passed**. The [machine-readable record](../skills/linux-computer-use/references/validation-results.json) retains assertions, timings, runtime versions and the image ID. Raw local logs, bus identifiers and temporary process paths are kept in ignored `artifacts/`; reviewed GUI captures are included under [visual assets](assets/ASSETS.md).
 
 The host was SteamOS **3.8.26**, KWin **6.4.3**, Python **3.13.5**. The container had Hyprland **0.56.2**, Sway **1.12**, KWin **6.7.5**, Python **3.14.7**, GStreamer **1.28.7** and PipeWire **1.6.8**.
 

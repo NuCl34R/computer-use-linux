@@ -5,7 +5,7 @@
 
 ## Ce que fait le projet
 
-Linux Computer Use est un skill autonome et un contrôleur natif pour les applications Linux : captures d’écran, accessibilité AT-SPI, fenêtres, souris, clavier, Unicode et actions groupées. Les **19 mêmes outils** sont disponibles par MCP stdio et CLI JSON. Le contrôleur ne dépend ni de Codex, ni d’un fournisseur de modèles, ni d’une clé API.
+Linux Computer Use est un skill autonome et un contrôleur natif pour les applications Linux : captures d’écran, accessibilité AT-SPI, fenêtres, souris, clavier, Unicode et actions groupées. Les **20 mêmes outils** sont disponibles par MCP stdio et CLI JSON. Le contrôleur ne dépend ni de Codex, ni d’un fournisseur de modèles, ni d’une clé API.
 
 Son mode **bureau privé** crée un écran, un compositeur, un focus, un presse-papiers et des bus de session indépendants. L’agent peut travailler dans ses applications pendant que vous continuez à utiliser les vôtres. Le mode **bureau courant** lui permet plutôt d’agir dans les fenêtres déjà ouvertes, en partageant votre focus et votre curseur.
 

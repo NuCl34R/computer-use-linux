@@ -52,14 +52,8 @@ are same-user applications. For file isolation, run the supplied Podman image
 with only the work directory mounted. Existing single-instance applications
 may need a fresh profile/instance argument to stay in the private session.
 
-## Reference projects and primary specifications
+## Native protocol specifications
 
-- [agent-sh/computer-use-linux](https://github.com/agent-sh/computer-use-linux):
-  useful reference for AT-SPI and compositor coverage. This project does not
-  bundle its Rust binary or invoke its system-modifying installer.
-- [TGYD-helige/pi computer-use](https://github.com/TGYD-helige/pi/tree/master/packages/pi-computer-use):
-  useful reference for persistent driver lifecycle and mixed image/structured
-  responses. Its bundled Cua driver is not a dependency here.
 - [RemoteDesktop portal](https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.RemoteDesktop.html)
   and [ScreenCast portal](https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.ScreenCast.html).
 - [KDE Wayland protocols](https://invent.kde.org/libraries/plasma-wayland-protocols)

@@ -4,6 +4,11 @@
 
 Linux Computer Use is a preview implementation. Contributions should improve a real desktop workflow, protocol boundary or installation experience. Keep the native runtime self-contained under `skills/linux-computer-use/scripts/`; every harness must receive the same behavior.
 
+This repository contains the skill, installer, runtime tests and their documentation.
+Keep projects produced with the skill in a separate workspace. A real task can
+reveal a reusable runtime fix or regression test; its deliverables and project
+assets belong to that task's workspace.
+
 ## Development
 
 Use your distribution’s Python 3.10+ and native libraries. `./install.sh --dry-run` describes the host; `--install-deps` can provision a supported mutable system. A pip-only virtual environment is not enough for GI, GTK, GStreamer and AT-SPI.

@@ -52,7 +52,7 @@ def main():
     for name in names:
         if "`" + name + "`" not in readme:
             errors.append("README tool inventory missing " + name)
-    if len(names) != 19:
+    if len(names) != 20:
         errors.append("Update the documented tool count")
     if errors:
         print("\n".join(errors), file=sys.stderr)
