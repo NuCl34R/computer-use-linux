@@ -47,9 +47,11 @@ Native package naming follows [PyGObject’s distribution guidance](https://pygo
 
 `--install-deps` explicitly enables the displayed native package command on a mutable system; the package manager asks for normal confirmation. It never enables package installation on an immutable host. Podman is a bootstrap dependency for container mode and must be configured through the distribution’s supported method. Run the installer as the intended normal user, not through sudo.
 
-An installation is staged before replacement. Updating retains uniquely timestamped backups and rolls the installed files back on a write/rename failure. OS package operations and container image builds occur before this transaction and are not rolled back. The manifest `install-manifest.json` stores file checksums, chosen runtime and exact MCP configuration.
+An installation is staged before replacement. Updating creates and verifies a timestamped `.tar.gz` backup in `$XDG_DATA_HOME/linux-computer-use/backups` (normally `~/.local/share/linux-computer-use/backups`; overridden by `--data-dir`). Archives have owner-only read/write permissions. They contain the previous skill, launcher, application identity and a `backup.json` with original paths and file checksums. Keeping backups as archives prevents harnesses from discovering duplicate skills. `--update` also migrates installer-named legacy skill backup directories into this archive storage, preserving their contents before removing the old directories. Unrecognized directories and symlinks are left alone; cleanup failures are reported in the installer's `warnings` list.
 
-Removal checks the manifest and refuses to delete modified installed files. Pass the same harness/path options used for installation. It leaves backups, user work and Podman images intact. Restoring a backup means moving the matching skill, launcher and application identity backups back to their original paths after preserving any newer changes.
+The installer rolls installed files back on a write/rename failure. OS package operations and container image builds occur before this transaction and are not rolled back. The manifest `install-manifest.json` stores file checksums, chosen runtime and exact MCP configuration.
+
+Removal checks the manifest and refuses to delete modified installed files. Pass the same harness/path options used for installation. It leaves backups, user work and Podman images intact. To restore, extract a trusted archive into a temporary directory outside your harness's skill directories, inspect `backup.json`, and restore the listed entries to their original paths after preserving newer changes. A migrated legacy archive contains only that legacy skill directory. Do not extract backups alongside active skills: this would create discoverable duplicates again.
 
 The launcher directory may need to be added to PATH using your normal shell configuration. Until then use `~/.local/bin/linux-computer-use` explicitly.
 
@@ -67,17 +69,17 @@ The image contains KWin, Hyprland, Sway, Xvfb, GTK, Qt’s kdialog, xterm and na
 | --- | --- | --- |
 | `CUL_WORKDIR` | Launching process’s current directory | Host directory mounted read/write at `/work` |
 | `CUL_NETWORK` | `none` | Set `host` when the task needs network access |
-| `CUL_IMAGE` | `localhost/linux-computer-use:0.1.0` | Alternative locally built runtime image |
+| `CUL_IMAGE` | `localhost/linux-computer-use:0.1.1` | Alternative locally built runtime image |
 | `CUL_GPU` | `0` | Set `1` to expose `/dev/dri/renderD128` for a GPU compositor |
 
 Set these through the harness’s environment configuration for MCP. Choose an explicit work directory instead of relying on an unknown harness working directory. There is no host home, display, session bus, input device or container-engine socket mount. SELinux label separation is disabled for this container so mounting a user work directory does not relabel it; normal user permissions still apply.
 
-Network is disabled during sessions by default; the **image build** needs network access for distribution packages. The image’s Arch base is pinned by digest, but package versions come from the repositories at build time. Capture `podman image inspect localhost/linux-computer-use:0.1.0 --format '{{.Id}}'` with test reports for exact runtime identification.
+Network is disabled during sessions by default; the **image build** needs network access for distribution packages. The image’s Arch base is pinned by digest, but package versions come from the repositories at build time. Capture `podman image inspect localhost/linux-computer-use:0.1.1 --format '{{.Id}}'` with test reports for exact runtime identification.
 
 To add an application, derive a local image from the runtime:
 
 ```dockerfile
-FROM localhost/linux-computer-use:0.1.0
+FROM localhost/linux-computer-use:0.1.1
 RUN pacman -Syu --noconfirm --needed firefox && pacman -Scc --noconfirm
 ```
 

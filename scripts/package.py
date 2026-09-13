@@ -10,7 +10,7 @@ import subprocess
 import tarfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-PREFIX = "linux-computer-use-0.1.0"
+PREFIX = "linux-computer-use-0.1.1"
 EXCLUDED = {"artifacts", "dist", ".git", ".codex", ".agents", ".venv", "__pycache__"}
 
 

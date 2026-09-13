@@ -49,7 +49,14 @@ This copies the self-contained skill and installs a `linux-computer-use` launche
 in `~/.local/bin`. It never edits a harness's existing configuration. To use a
 different skill directory, pass `~/.claude/skills`, `~/.agents/skills`, or the
 directory supported by that harness. An existing install requires `--update`;
-the installer keeps a dated backup.
+the installer keeps a verified, owner-only `.tar.gz` backup under
+`$XDG_DATA_HOME/linux-computer-use/backups` (normally `~/.local/share` as the
+data root, overridable with `--data-dir`). Updates also migrate installer-named
+legacy skill backups into archives so harnesses discover only the active skill.
+Archives preserve prior files and include `backup.json` with original paths.
+Extract them only into a temporary directory outside skill discovery paths when
+restoring; preserve newer changes first. Check the installer's `warnings` list
+for any cleanup that could not complete.
 
 Any MCP harness can launch the same implementation:
 

@@ -87,7 +87,7 @@ podman run --rm --read-only --network=none --userns=keep-id \
   --user "$(id -u):$(id -g)" --env CUL_TEST_ENTRY=/opt/cul/cul.py \
   --tmpfs /tmp:rw,exec,mode=1777 --tmpfs /run:rw,mode=755 \
   -v "$PWD:/work:ro" -v "$PWD/artifacts/container-sway:/results:rw" \
-  --workdir /work localhost/linux-computer-use:0.1.0 \
+  --workdir /work localhost/linux-computer-use:0.1.1 \
   python3 tests/e2e.py --compositor sway --output /results
 ```
 

@@ -2,6 +2,17 @@
 
 [← Repository home](../README.md) · [French detailed baseline](../skills/linux-computer-use/references/validation.md)
 
+## Preview 0.1.1 · September 13, 2026
+
+The [0.1.1 checks](preview-0.1.1-validation.json) cover 14 installer contracts,
+seven input contracts, migration of the actual SteamOS skill backup, and real
+application control through the installed native KWin and container Sway
+launchers. Both launchers expose 20 tools, enter Unicode into a GTK field,
+verify the resulting screenshot and stop. The first container initialization
+attempt timed out; the subsequent full GUI run passed. The record retains that
+observation. Earlier reports below remain historical baselines; Omarchy
+workstation acceptance is still pending.
+
 ## Relative pointer input · September 13, 2026
 
 The `move_relative` addition passed the native GTK/MCP acceptance suite on
@@ -89,7 +100,7 @@ podman run --rm --read-only --network=none --userns=keep-id \
   --env CUL_TEST_ENTRY=/opt/cul/cul.py \
   --tmpfs /tmp:rw,exec,mode=1777 --tmpfs /run:rw,mode=755 \
   -v "$PWD:/work:ro" -v "$PWD/artifacts/container-sway:/results:rw" \
-  --workdir /work localhost/linux-computer-use:0.1.0 \
+  --workdir /work localhost/linux-computer-use:0.1.1 \
   python3 tests/e2e.py --compositor sway --output /results
 ```
 

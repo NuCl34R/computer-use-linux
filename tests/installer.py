@@ -3,6 +3,8 @@ import argparse
 import importlib.util
 import json
 import pathlib
+import shutil
+import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -92,8 +94,19 @@ class Installer(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "already exists"):
                 i.install(args, self.plan())
             args.update = True
-            update = i.install(args, self.plan())
-            self.assertEqual(len(update["backups"]), 3)
+            old_launcher = launcher.read_bytes()
+            for _ in range(3):
+                update = i.install(args, self.plan())
+                self.assertEqual(len(update["backups"]), 1)
+                self.assertEqual(list(args.skills_dir.rglob("SKILL.md")), [pathlib.Path(result["skill"])])
+                self.assertEqual(update["warnings"], [])
+                backup = pathlib.Path(update["backups"][0])
+                self.assertNotIn(args.skills_dir, backup.parents)
+                self.assertEqual(backup.stat().st_mode & 0o777, 0o600)
+                with tarfile.open(backup) as archive:
+                    self.assertEqual(archive.extractfile("launcher").read(), old_launcher)
+                    self.assertEqual(archive.extractfile("skill/SKILL.md").read(), pathlib.Path(result["skill"]).read_bytes())
+                    self.assertEqual(json.load(archive.extractfile("backup.json"))["original_paths"]["launcher"], str(launcher))
             args.dry_run = True
             self.assertFalse(i.uninstall(args)["uninstalled"])
             self.assertTrue(launcher.exists())
@@ -101,6 +114,67 @@ class Installer(unittest.TestCase):
             self.assertTrue(i.uninstall(args)["uninstalled"])
             self.assertFalse(launcher.exists())
             self.assertTrue(all(pathlib.Path(p).exists() for p in update["backups"]))
+
+    def test_legacy_backup_migration_preserves_files_modes_and_links(self):
+        with tempfile.TemporaryDirectory() as directory:
+            args = self.args(pathlib.Path(directory))
+            result = i.install(args, self.plan())
+            legacy = args.skills_dir / (i.NAME + ".backup-20260913T204400995977Z")
+            shutil.copytree(pathlib.Path(result["skill"]).parent, legacy)
+            custom = legacy / "custom.txt"
+            custom.write_text("user edits must survive\n")
+            custom.chmod(0o640)
+            (legacy / "custom-link").symlink_to("custom.txt")
+            unrelated = args.skills_dir / (i.NAME + ".backup-manual")
+            unrelated.mkdir()
+            symlink = args.skills_dir / (i.NAME + ".backup-20260913-123456")
+            symlink.symlink_to(unrelated, target_is_directory=True)
+            args.update = True
+            update = i.install(args, self.plan())
+            self.assertFalse(legacy.exists())
+            self.assertTrue(unrelated.is_dir())
+            self.assertTrue(symlink.is_symlink())
+            self.assertEqual(list(args.skills_dir.rglob("SKILL.md")), [pathlib.Path(result["skill"])])
+            self.assertEqual(len(update["migrated_backups"]), 1)
+            with tarfile.open(update["migrated_backups"][0]["archive"]) as archive:
+                self.assertEqual(archive.extractfile("skill/custom.txt").read(), b"user edits must survive\n")
+                self.assertEqual(archive.getmember("skill/custom.txt").mode, 0o640)
+                self.assertEqual(archive.getmember("skill/custom-link").linkname, "custom.txt")
+                self.assertEqual(json.load(archive.extractfile("backup.json"))["original_paths"]["skill"], str(legacy))
+
+    def test_failed_archive_does_not_replace_installation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            args = self.args(pathlib.Path(directory))
+            result = i.install(args, self.plan())
+            launcher = pathlib.Path(result["launcher"])
+            launcher.write_text("original custom launcher\n")
+            args.update = True
+            with patch.object(i, "backup_archive", side_effect=OSError("archive disk full")):
+                with self.assertRaisesRegex(OSError, "disk full"):
+                    i.install(args, self.plan())
+            self.assertEqual(launcher.read_text(), "original custom launcher\n")
+            self.assertEqual(list(args.skills_dir.rglob("SKILL.md")), [pathlib.Path(result["skill"])])
+
+    def test_failed_legacy_archive_keeps_original(self):
+        with tempfile.TemporaryDirectory() as directory:
+            args = self.args(pathlib.Path(directory))
+            result = i.install(args, self.plan())
+            legacy = args.skills_dir / (i.NAME + ".backup-20260913-123456")
+            shutil.copytree(pathlib.Path(result["skill"]).parent, legacy)
+            with patch.object(i, "backup_archive", side_effect=OSError("archive disk full")):
+                migrated, warnings = i.migrate_backups(legacy, args.data_dir / "backups")
+            self.assertEqual(migrated, [])
+            self.assertEqual(len(warnings), 1)
+            self.assertTrue((legacy / "SKILL.md").is_file())
+
+    def test_backup_storage_cannot_be_inside_skill(self):
+        with tempfile.TemporaryDirectory() as directory:
+            args = self.args(pathlib.Path(directory))
+            # Application identity is outside the source, but backup storage
+            # would land inside it. Reject before creating either directory.
+            args.data_dir = i.ROOT / "skills"
+            with self.assertRaisesRegex(RuntimeError, "outside the source"):
+                i.install(args, self.plan())
 
     def test_rollback_restores_all_original_files(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -120,6 +194,9 @@ class Installer(unittest.TestCase):
             self.assertEqual(launcher.read_bytes(), old)
             self.assertTrue(pathlib.Path(before["skill"]).exists())
             self.assertFalse(list(pathlib.Path(directory).rglob("*.backup-*")))
+            self.assertFalse(list(pathlib.Path(directory).rglob("*.tar.gz")))
+            self.assertFalse(list(pathlib.Path(directory).rglob(".cul-rollback-*")))
+            self.assertEqual(list(args.skills_dir.rglob("SKILL.md")), [pathlib.Path(before["skill"])])
             self.assertTrue(i.uninstall(args)["uninstalled"])
 
     def test_uninstall_refuses_modified_file_without_partial_removal(self):

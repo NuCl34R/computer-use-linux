@@ -1,0 +1,79 @@
+{
+  "date": "2026-09-13",
+  "version": "0.1.1",
+  "host": "SteamOS 3.8.26 / KDE Wayland",
+  "installer_contracts": {
+    "passed": 14,
+    "coverage": [
+      "Repeated updates leave one discoverable skill",
+      "Archive content, owner-only permissions and retained backups after uninstall",
+      "Legacy backup migration preserves user files, modes and symlinks",
+      "Archive failure retains originals",
+      "Failed installation restores original files",
+      "Backup storage cannot overlap source or installed files"
+    ]
+  },
+  "input_contracts": {
+    "passed": 7
+  },
+  "host_update": {
+    "status": "passed",
+    "legacy_skill_backups_migrated": 1,
+    "discoverable_skill_copies_after_update": 1,
+    "warnings": []
+  },
+  "installed_launchers": {
+    "native": {
+      "runtime": "native",
+      "status": "passed",
+      "checks": [
+        "Actual installed launcher initializes MCP",
+        "20 tools discovered",
+        "Owned private desktop starts",
+        "Native GTK callback confirms exact Unicode input",
+        "Screenshot changed after acknowledged input",
+        "Launcher exits cleanly after stop"
+      ],
+      "backend": "kwin-private"
+    },
+    "container": {
+      "runtime": "container",
+      "status": "passed",
+      "checks": [
+        "Actual installed launcher initializes MCP",
+        "20 tools discovered",
+        "Owned private desktop starts",
+        "Native GTK callback confirms exact Unicode input",
+        "Screenshot changed after acknowledged input",
+        "Launcher exits cleanly after stop"
+      ],
+      "backend": "wlr"
+    }
+  },
+  "observations": [
+    "The first container launcher attempt timed out during MCP initialization; a persistent-stdio probe and the subsequent full GUI run passed. The initial timeout cause was not established.",
+    "The successful container GUI run logged a Python cleanup warning during shutdown; it returned exit code 0 and the disposable container was removed."
+  ],
+  "limitations": [
+    "Omarchy workstation acceptance remains pending",
+    "No new macOS/Windows performance comparison"
+  ],
+  "container_startup_followup": {
+    "passed": 5,
+    "initialization_seconds": [
+      0.128,
+      0.126,
+      0.119,
+      0.115,
+      0.111
+    ],
+    "tool_count_each": 20,
+    "exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

@@ -19,7 +19,7 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-B8F774?style=flat-square&labelColor=0B0F12&color=B8F774"></a>
   <img alt="MCP stdio and JSON CLI" src="https://img.shields.io/badge/interface-MCP%20%2B%20JSON%20CLI-B8F774?style=flat-square&labelColor=0B0F12&color=B8F774">
   <img alt="Wayland and X11" src="https://img.shields.io/badge/display-Wayland%20%2B%20X11-B8F774?style=flat-square&labelColor=0B0F12&color=B8F774">
-  <img alt="Preview version 0.1.0" src="https://img.shields.io/badge/preview-0.1.0-F2B66D?style=flat-square&labelColor=0B0F12&color=F2B66D">
+  <img alt="Preview version 0.1.1" src="https://img.shields.io/badge/preview-0.1.1-F2B66D?style=flat-square&labelColor=0B0F12&color=F2B66D">
 </p>
 
 ---
@@ -108,7 +108,7 @@ See [container operation and customization](docs/INSTALLATION.md#container-runti
 ./install.sh --harness agents
 ./install.sh --skills-dir "$HOME/path/to/harness/skills"
 
-# Keep timestamped backups of the existing installation.
+# Keep verified backup archives and migrate old skill backup directories.
 ./install.sh --update
 
 # Preview removal; use the same directory/harness options as installation.
@@ -116,13 +116,13 @@ See [container operation and customization](docs/INSTALLATION.md#container-runti
 ./install.sh --uninstall
 ```
 
-Default destinations are `~/.codex/skills/linux-computer-use`, `~/.local/bin/linux-computer-use` and an application identity under `~/.local/share/applications`. `--skills-dir`, `--bin-dir` and `--data-dir` override them. No harness or shell configuration is rewritten. A manifest records the runtime and exact MCP configuration. Removal refuses modified files and preserves backups and container images.
+Default destinations are `~/.codex/skills/linux-computer-use`, `~/.local/bin/linux-computer-use` and an application identity under `~/.local/share/applications`. `--skills-dir`, `--bin-dir` and `--data-dir` override them. Updates keep private, verified backup archives under the data directory's `linux-computer-use/backups`, and migrate old skill backups so harnesses do not discover duplicates. No harness or shell configuration is rewritten. A manifest records the runtime and exact MCP configuration. Removal refuses modified files and preserves backups and container images.
 
 If you install a second harness using the same launcher, use `--update`; the shared launcher then points to the latest installation. Use a separate `--bin-dir` and `--data-dir` for fully independent installs.
 
 </details>
 
-A checksummed source archive is also available in the [0.1.0 preview release](https://github.com/NuCl34R/computer-use-linux/releases/tag/v0.1.0). Extract it and run `./install.sh` from its directory; the installer does not require Git metadata.
+A checksummed source archive is also available in the [0.1.1 preview release](https://github.com/NuCl34R/computer-use-linux/releases/tag/v0.1.1). Extract it and run `./install.sh` from its directory; the installer does not require Git metadata.
 
 ## Give your agent a desktop
 

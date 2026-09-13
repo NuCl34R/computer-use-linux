@@ -3,20 +3,23 @@
 import argparse
 import datetime
 import hashlib
+import io
 import json
 import os
 import pathlib
 import platform
+import re
 import shlex
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 NAME = "linux-computer-use"
 IDENTITY = "local.linuxcomputeruse.Controller.desktop"
-IMAGE = "localhost/linux-computer-use:0.1.0"
+IMAGE = "localhost/linux-computer-use:0.1.1"
 PACKAGES = {
     "apt-get": "python3 python3-gi python3-gi-cairo python3-dbus python3-cairo gir1.2-gtk-3.0 gir1.2-atspi-2.0 gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-pipewire at-spi2-core dbus-daemon libxkbcommon0 libxtst6 sway xwayland x11-xkb-utils".split(),
     "pacman": "python python-gobject python-dbus python-cairo gtk3 at-spi2-core gstreamer gst-plugins-base gst-plugins-good gst-plugin-pipewire dbus libxkbcommon libxtst sway xorg-xwayland xkeyboard-config".split(),
@@ -158,6 +161,59 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def backup_archive(directory, entries):
+    """Verify a private archive before callers move or remove original files."""
+    directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    fd, filename = tempfile.mkstemp(prefix=NAME + "-" + stamp + "-", suffix=".tar.gz", dir=directory)
+    archive_path = pathlib.Path(filename)
+    try:
+        hashes = {}
+        with os.fdopen(fd, "wb") as raw, tarfile.open(fileobj=raw, mode="w:gz", dereference=False) as archive:
+            for label, path in entries:
+                paths = [path, *sorted(path.rglob("*"))] if path.is_dir() else [path]
+                for item in paths:
+                    if item.is_file() and not item.is_symlink():
+                        name = label if item == path else label + "/" + item.relative_to(path).as_posix()
+                        hashes[name] = digest(item)
+                archive.add(path, arcname=label)
+            metadata = json.dumps({"schema": 1, "created_at": stamp,
+                "original_paths": {label: str(path) for label, path in entries}, "files_sha256": hashes}, indent=2).encode()
+            info = tarfile.TarInfo("backup.json")
+            info.size, info.mode = len(metadata), 0o600
+            archive.addfile(info, io.BytesIO(metadata))
+        with tarfile.open(archive_path) as archive:
+            for name, expected in hashes.items():
+                with archive.extractfile(name) as content:
+                    if hashlib.sha256(content.read()).hexdigest() != expected:
+                        raise RuntimeError("Backup verification failed: " + name)
+            if archive.extractfile("backup.json").read() != metadata:
+                raise RuntimeError("Backup metadata verification failed")
+        return archive_path
+    except BaseException:
+        archive_path.unlink(missing_ok=True)
+        raise
+
+
+def migrate_backups(destination, directory):
+    """Archive only installer-named legacy copies of this skill, never other skills."""
+    migrated, warnings = [], []
+    pattern = re.compile(re.escape(NAME) + r"\.backup-(?:\d{8}-\d{6}|\d{8}T\d{12}Z)")
+    for path in sorted(destination.parent.iterdir()):
+        if not pattern.fullmatch(path.name) or path.is_symlink() or not path.is_dir():
+            continue
+        try:
+            entry = path / "SKILL.md"
+            if entry.is_symlink() or not entry.is_file() or not re.search(r"^name: *linux-computer-use *$", entry.read_text(), re.M):
+                continue
+            archive = backup_archive(directory, [("skill", path)])
+            migrated.append({"original": str(path), "archive": str(archive)})
+            shutil.rmtree(path)
+        except (OSError, ValueError, RuntimeError, tarfile.TarError) as error:
+            warnings.append("Legacy backup retained or partially removed; check its archive before cleanup: " + str(path) + ": " + str(error))
+    return migrated, warnings
+
+
 def install(args, plan):
     destination = args.skills_dir.expanduser().absolute() / NAME
     launcher = args.bin_dir.expanduser().absolute() / NAME
@@ -172,10 +228,14 @@ def install(args, plan):
         raise RuntimeError("An installation target already exists; use --update to keep a backup and replace it")
     if len(set(targets)) != 3 or any(a in b.parents for a in targets for b in targets if a != b):
         raise RuntimeError("Skill, launcher and application identity paths must not overlap")
+    archive_dir = args.data_dir.expanduser().absolute() / NAME / "backups"
+    if any(archive_dir.resolve() == p.resolve() or p.resolve() in archive_dir.resolve().parents for p in [source, *targets]):
+        raise RuntimeError("Backup storage must be outside the source and installation targets; choose another --data-dir")
     for path in targets:
         path.parent.mkdir(parents=True, exist_ok=True)
     staged = []
-    backups = []
+    rollback = []
+    archives = []
     committed = []
     stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     try:
@@ -202,26 +262,41 @@ def install(args, plan):
             "mcp_configuration": configuration, "external_sha256": {str(p): digest(temp) for p, temp in zip(targets[1:], staged[1:])},
             "files_sha256": {str(p.relative_to(stage)): digest(p) for p in sorted(stage.rglob("*")) if p.is_file()}}
         (stage / "install-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+        previous = [(label, path) for label, path in zip(("skill", "launcher", "application.desktop"), targets) if path.exists()]
+        if previous:
+            archives.append(backup_archive(archive_dir, previous))
         for path, temporary in zip(targets, staged):
             if path.exists():
-                backup = path.with_name(path.name + ".backup-" + stamp)
+                backup = path.with_name(".cul-rollback-" + path.name + "-" + stamp)
                 path.rename(backup)
-                backups.append((path, backup))
+                rollback.append((path, backup))
             temporary.rename(path)
             committed.append(path)
-        return {"installed": True, "plan": plan, "skill": str(destination / "SKILL.md"), "launcher": str(launcher),
-            "mcp_configuration": configuration, "backups": [str(p) for _, p in backups],
-            "path_hint": "Add " + str(launcher.parent) + " to PATH if needed; no shell configuration was edited."}
     except BaseException:
         for path in reversed(committed):
             shutil.rmtree(path) if path.is_dir() else path.unlink()
-        for path, backup in reversed(backups):
+        for path, backup in reversed(rollback):
             backup.rename(path)
+        for archive in archives:
+            archive.unlink()
         raise
     finally:
         for path in staged:
             if path.exists():
                 shutil.rmtree(path) if path.is_dir() else path.unlink()
+    # Replacement is committed. Cleanup failures must not roll back a new install
+    # after some of the old files have already been removed.
+    warnings = []
+    for _, backup in rollback:
+        try:
+            shutil.rmtree(backup) if backup.is_dir() else backup.unlink()
+        except OSError as error:
+            warnings.append("Verified archive retained; remove leftover rollback path: " + str(backup) + ": " + str(error))
+    migrated, migration_warnings = migrate_backups(destination, archive_dir) if args.update else ([], [])
+    return {"installed": True, "plan": plan, "skill": str(destination / "SKILL.md"), "launcher": str(launcher),
+        "mcp_configuration": configuration, "backups": [str(p) for p in archives],
+        "migrated_backups": migrated, "warnings": warnings + migration_warnings,
+        "path_hint": "Add " + str(launcher.parent) + " to PATH if needed; no shell configuration was edited."}
 
 
 def uninstall(args):
@@ -256,7 +331,7 @@ def main():
     parser.add_argument("--dry-run", "--plan", action="store_true", help="Print detection and commands; do not install")
     parser.add_argument("--install-deps", action="store_true", help="Run the displayed distribution package command on a mutable system")
     parser.add_argument("--build-container", action="store_true", help="Build the Podman runtime if container mode is selected")
-    parser.add_argument("--update", action="store_true", help="Replace installed files, keeping timestamped backups")
+    parser.add_argument("--update", action="store_true", help="Replace installed files, archive backups and migrate legacy skill backups")
     parser.add_argument("--uninstall", action="store_true", help="Remove an unmodified installation using its manifest")
     args = parser.parse_args()
     if args.skills_dir is None:
@@ -293,7 +368,7 @@ def main():
                 raise RuntimeError("Runtime image is missing; rerun with --runtime container --build-container")
         print(json.dumps(install(args, plan), indent=2))
         return 0
-    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError, tarfile.TarError) as error:
         print(json.dumps({"installed": False, "error": str(error)}, indent=2), file=sys.stderr)
         return 1
 

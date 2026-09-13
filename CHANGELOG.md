@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — Preview — 2026-09-13
+
+- Store verified, private backup archives outside skill discovery directories;
+  migrate installer-created legacy skill backups during `--update`.
+- Preserve user edits, file modes and symlinks in archives; retain transactional
+  rollback and test repeated updates, migration and backup write failures.
 
 - Native `move_relative` input for locked-pointer 3D cameras on KWin, wlroots,
   X11 and RemoteDesktop portals; twenty shared tools.

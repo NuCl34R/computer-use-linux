@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 cul_source=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-cul_image=${CUL_IMAGE:-localhost/linux-computer-use:0.1.0}
+cul_image=${CUL_IMAGE:-localhost/linux-computer-use:0.1.1}
 if [ "${1:-}" = build ]; then
     exec podman build --network=host -t "$cul_image" -f "$cul_source/Containerfile" "$cul_source"
 fi

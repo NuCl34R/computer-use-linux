@@ -9,7 +9,7 @@ Linux Computer Use est un skill autonome et un contrôleur natif pour les applic
 
 Son mode **bureau privé** crée un écran, un compositeur, un focus, un presse-papiers et des bus de session indépendants. L’agent peut travailler dans ses applications pendant que vous continuez à utiliser les vôtres. Le mode **bureau courant** lui permet plutôt d’agir dans les fenêtres déjà ouvertes, en partageant votre focus et votre curseur.
 
-Cette version `0.1.0` est une préversion : une base de treize rapports E2E passe sur SteamOS et dans de vrais bureaux privés/conteneurisés. **La validation du poste Omarchy est encore à faire.**
+Cette version `0.1.1` est une préversion : une base de treize rapports E2E passe sur SteamOS et dans de vrais bureaux privés/conteneurisés. **La validation du poste Omarchy est encore à faire.**
 
 ## Installer
 

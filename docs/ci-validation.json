@@ -1,7 +1,7 @@
 {
   "date": "2026-09-13",
   "environment": "GitHub-hosted Ubuntu 24.04",
-  "commit": "f7096a6293f6214858f15452babe5f39430ec846",
+  "commit": "6fec671c838974da9857de4a3b2e6784a2fe88d2",
   "run": "https://github.com/NuCl34R/computer-use-linux/actions/runs/34777639989",
   "results": {
     "sway": {
@@ -66,5 +66,6 @@
       "server_returncode": 0,
       "remaining_processes": []
     }
-  }
+  },
+  "history_note": "Commit identifier updated after author-email anonymization; the tested source tree is unchanged. The linked historical CI run predates that rewrite."
 }
