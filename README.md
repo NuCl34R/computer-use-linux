@@ -39,7 +39,7 @@ Its defining feature is a **private desktop**: the agent gets its own compositor
 
 ## Start in two minutes
 
-Clone this repository using an account that has access while it is private:
+Clone the repository and review the detected installation plan:
 
 ```sh
 git clone https://github.com/NuCl34R/computer-use-linux.git

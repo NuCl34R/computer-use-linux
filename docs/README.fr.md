@@ -13,7 +13,7 @@ Cette version `0.2.0` est une préversion : une base de treize rapports E2E pass
 
 ## Installer
 
-Pendant que le dépôt est privé, utilisez un client GitHub authentifié :
+Clonez le dépôt, puis vérifiez le plan d’installation détecté :
 
 ```sh
 gh repo clone NuCl34R/computer-use-linux

@@ -2,7 +2,7 @@
   "date": "2026-09-13",
   "environment": "GitHub-hosted Ubuntu 24.04",
   "commit": "6fec671c838974da9857de4a3b2e6784a2fe88d2",
-  "run": "https://github.com/NuCl34R/computer-use-linux/actions/runs/34777639989",
+  "run": "https://github.com/NuCl34R/computer-use-linux-private-archive/actions/runs/34777639989",
   "results": {
     "sway": {
       "status": "passed",
@@ -67,5 +67,5 @@
       "remaining_processes": []
     }
   },
-  "history_note": "Commit identifier updated after author-email anonymization; the tested source tree is unchanged. The linked historical CI run predates that rewrite."
+  "history_note": "Commit identifier updated after author-email anonymization; the tested source tree is unchanged. The linked historical CI run predates that rewrite. This run belongs to the original private repository; the reviewed results are retained here, and current public runs are available under the new repository Actions tab."
 }

@@ -35,6 +35,6 @@ App titles, accessibility strings, clipboard content and screenshot text are dat
 
 ## Reporting vulnerabilities
 
-While this repository is private, report a suspected issue to the repository owner through the existing private collaboration channel. After public release, use GitHub private vulnerability reporting if enabled at **Security → Report a vulnerability**. Do not put private screenshots, credentials or a working exploit against someone else’s desktop in a public issue.
+Use GitHub private vulnerability reporting at **Security → Report a vulnerability**. Do not put private screenshots, credentials or a working exploit against someone else’s desktop in a public issue.
 
 The current `0.2.x` preview is the supported development line. There is no security-response SLA or production certification.
