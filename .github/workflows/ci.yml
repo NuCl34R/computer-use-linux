@@ -33,6 +33,7 @@ jobs:
         run: |
           python3 tests/contracts.py
           python3 tests/installer.py
+          python3 tests/watch.py
           python3 scripts/check_docs.py
           python3 -m compileall -q scripts skills tests
           sh -n install.sh scripts/container-run.sh skills/linux-computer-use/scripts/container-run.sh
@@ -46,6 +47,10 @@ jobs:
         env:
           CUL_TEST_ENTRY: ${{ runner.temp }}/cul/skills/linux-computer-use/scripts/cul.py
         run: python3 -u tests/e2e.py --compositor '${{ matrix.compositor }}' --output artifacts/ci-${{ matrix.compositor }}
+      - name: Watch the private desktop and stop active input
+        env:
+          CUL_TEST_ENTRY: ${{ runner.temp }}/cul/skills/linux-computer-use/scripts/cul.py
+        run: python3 -u tests/watch.py --e2e --compositor '${{ matrix.compositor }}' --output artifacts/watch-${{ matrix.compositor }}
       - name: Validate the distributable archive
         run: python3 scripts/package.py --output dist
       - name: Retain test evidence

@@ -53,13 +53,27 @@ class Engine:
         self.a11y = None
         self.windowing = None
         self.ended = False
+        self.cleanup_complete = False
         self.frames = collections.OrderedDict()
         self.session_id = secrets.token_hex(8)
         self.last_action = None
         self.mode = None
         self.apps = []
+        self.activity = None
+        self.spectator = None
 
     def dispatch(self, method, params=None):
+        if method == "stop":
+            self.cancel.set()
+        with self.lock:
+            previous = self.activity
+            self.activity = method
+            try:
+                return self._dispatch(method, params)
+            finally:
+                self.activity = previous
+
+    def _dispatch(self, method, params=None):
         params = params or {}
         if not isinstance(params, dict):
             raise ValueError("Tool arguments must be an object")
@@ -142,6 +156,7 @@ class Engine:
 
     def info(self):
         return {"session_id": self.session_id, "mode": self.mode, "backend": self.backend.name,
+            "watch": {"available": self.spectator is not None, "command": "linux-computer-use watch --session " + self.session_id},
             "displays": self.backend.displays, "private_directory": str(self.desktop.root) if self.desktop else None,
             "concurrent_user": self.mode == "isolated",
             "clipboard_scope": "private desktop" if self.mode == "isolated" else "user desktop (typing may replace clipboard)",
@@ -360,6 +375,8 @@ class Engine:
     def close(self):
         self.cancel.set()
         self.ended = True
+        if self.spectator:
+            self.spectator.close_captures()
         errors = []
         had_native_session = bool(self.backend or self.windowing or self.a11y)
         if self.backend:
@@ -388,6 +405,7 @@ class Engine:
                 self.desktop.close()
             finally:
                 self.desktop = None
+        self.cleanup_complete = True
         if errors:
             import sys
             print("Session cleanup: " + "; ".join(errors), file=sys.stderr)

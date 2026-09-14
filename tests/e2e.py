@@ -39,11 +39,16 @@ class Client:
         self.index = 0
         self.timings = {}
         def read():
-            for line in self.process.stdout:
-                try:
-                    self.messages.put(json.loads(line))
-                except ValueError:
-                    self.messages.put({"error": "Non-JSON stdout: " + line})
+            try:
+                for line in self.process.stdout:
+                    try:
+                        self.messages.put(json.loads(line))
+                    except ValueError:
+                        self.messages.put({"error": "Non-JSON stdout: " + line})
+            except Exception as error:
+                self.messages.put({"error": "MCP stdout reader failed: " + repr(error)})
+            finally:
+                self.messages.put({"error": "MCP stdout closed; inspect server.log"})
         threading.Thread(target=read, daemon=True).start()
 
     def send(self, message):
@@ -53,7 +58,10 @@ class Client:
     def request(self, method, params=None):
         self.index += 1
         self.send({"jsonrpc": "2.0", "id": self.index, "method": method, "params": params or {}})
-        answer = self.messages.get(timeout=150 if params and params.get("name") == "start_session" else 20)
+        try:
+            answer = self.messages.get(timeout=150 if params and params.get("name") == "start_session" else 20)
+        except queue.Empty as error:
+            raise TimeoutError(f"MCP {method} timed out (process return code {self.process.poll()}); inspect server.log") from error
         assert answer.get("id") == self.index, answer
         assert "error" not in answer, answer
         return answer["result"]

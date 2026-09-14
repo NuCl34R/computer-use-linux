@@ -23,6 +23,11 @@ def main():
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("doctor", help="Read-only dependency and desktop report")
     commands.add_parser("mcp", help="MCP JSON-RPC over stdio (no daemon installation)")
+    watcher = commands.add_parser("watch", help="Open a live spectator view; keep using your own desktop")
+    watcher.add_argument("--list", action="store_true", help="List discoverable sessions without opening a viewer")
+    watcher.add_argument("--session", help="Initially select this session identifier")
+    watcher.add_argument("--no-open", action="store_true", help="Print the local viewer URL without opening a browser")
+    watcher.add_argument("--port", type=int, default=0, help="Local HTTP port; default chooses a free port")
     server = commands.add_parser("serve", help="Persistent same-user Unix-socket controller")
     server.add_argument("--socket", required=True)
     server.add_argument("--mode", choices=["current", "isolated"], default="isolated")
@@ -40,7 +45,10 @@ def main():
     commands.add_parser("tools", help="Print the shared MCP/CLI tool schemas")
     args = parser.parse_args()
     try:
-        if args.command == "call":
+        if args.command == "watch":
+            from cul.watch import run
+            run(args)
+        elif args.command == "call":
             from cul.server import call
             params = json.loads(pathlib.Path(args.json_file).read_text() if args.json_file else args.json)
             result = call(args.socket, args.tool, params)

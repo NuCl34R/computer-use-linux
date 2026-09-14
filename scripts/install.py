@@ -19,7 +19,7 @@ import tempfile
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 NAME = "linux-computer-use"
 IDENTITY = "local.linuxcomputeruse.Controller.desktop"
-IMAGE = "localhost/linux-computer-use:0.1.1"
+IMAGE = "localhost/linux-computer-use:0.2.0"
 PACKAGES = {
     "apt-get": "python3 python3-gi python3-gi-cairo python3-dbus python3-cairo gir1.2-gtk-3.0 gir1.2-atspi-2.0 gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-pipewire at-spi2-core dbus-daemon libxkbcommon0 libxtst6 sway xwayland x11-xkb-utils".split(),
     "pacman": "python python-gobject python-dbus python-cairo gtk3 at-spi2-core gstreamer gst-plugins-base gst-plugins-good gst-plugin-pipewire dbus libxkbcommon libxtst sway xorg-xwayland xkeyboard-config".split(),
@@ -366,6 +366,8 @@ def main():
                 subprocess.run([str(ROOT / "scripts/container-run.sh"), "build"], check=True, stdout=sys.stderr)
             if subprocess.run(["podman", "image", "exists", IMAGE]).returncode:
                 raise RuntimeError("Runtime image is missing; rerun with --runtime container --build-container")
+            if not args.build_container:
+                subprocess.run([str(ROOT / "scripts/container-run.sh"), "prepare"], check=True, stdout=sys.stderr)
         print(json.dumps(install(args, plan), indent=2))
         return 0
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError, tarfile.TarError) as error:

@@ -69,17 +69,25 @@ The image contains KWin, Hyprland, Sway, Xvfb, GTK, Qt’s kdialog, xterm and na
 | --- | --- | --- |
 | `CUL_WORKDIR` | Launching process’s current directory | Host directory mounted read/write at `/work` |
 | `CUL_NETWORK` | `none` | Set `host` when the task needs network access |
-| `CUL_IMAGE` | `localhost/linux-computer-use:0.1.1` | Alternative locally built runtime image |
+| `CUL_IMAGE` | `localhost/linux-computer-use:0.2.0` | Alternative locally built runtime image |
 | `CUL_GPU` | `0` | Set `1` to expose `/dev/dri/renderD128` for a GPU compositor |
 
-Set these through the harness’s environment configuration for MCP. Choose an explicit work directory instead of relying on an unknown harness working directory. There is no host home, display, session bus, input device or container-engine socket mount. SELinux label separation is disabled for this container so mounting a user work directory does not relabel it; normal user permissions still apply.
+Set these through the harness’s environment configuration for MCP. Choose an explicit work directory instead of relying on an unknown harness working directory. A separate private directory exposes only this container’s spectator sockets to the host, so `linux-computer-use watch` can display its desktop. There is no host home, display, session bus, input device or container-engine socket mount. SELinux label separation is disabled for this container so mounting a user work directory does not relabel it; normal user permissions still apply.
 
-Network is disabled during sessions by default; the **image build** needs network access for distribution packages. The image’s Arch base is pinned by digest, but package versions come from the repositories at build time. Capture `podman image inspect localhost/linux-computer-use:0.1.1 --format '{{.Id}}'` with test reports for exact runtime identification.
+Network is disabled during sessions by default; the **image build** needs network access for distribution packages. The image’s Arch base is pinned by digest, but package versions come from the repositories at build time. Capture `podman image inspect localhost/linux-computer-use:0.2.0 --format '{{.Id}}'` with test reports for exact runtime identification.
+
+Installation and `build` also prepare the image for your rootless user mapping.
+The first preparation after a rebuild can take tens of seconds on this host;
+it finishes before the harness starts its MCP startup timer. After replacing a
+custom `CUL_IMAGE`, run `linux-computer-use prepare` with that same environment
+before connecting the harness. If you bypass preparation, allow at least 120
+seconds for the harness's initial MCP connection. Normal agent requests are
+forwarded directly and never retried by the launcher.
 
 To add an application, derive a local image from the runtime:
 
 ```dockerfile
-FROM localhost/linux-computer-use:0.1.1
+FROM localhost/linux-computer-use:0.2.0
 RUN pacman -Syu --noconfirm --needed firefox && pacman -Scc --noconfirm
 ```
 

@@ -30,6 +30,16 @@ win.add(box)
 title = Gtk.Label(label="Linux Computer Use · Native GTK test")
 title.set_markup('<span size="xx-large" weight="bold">Linux Computer Use</span>')
 box.pack_start(title, False, False, 0)
+if "--animate" in sys.argv[2:]:
+    live = Gtk.Label(label="Live frame: 0")
+    live.get_accessible().set_name("Live frame counter")
+    box.pack_start(live, False, False, 0)
+    def tick():
+        value = state.get("live_frame", 0) + 1
+        live.set_text(f"Live frame: {value}")
+        record(live_frame=value)
+        return True
+    GLib.timeout_add(80, tick)
 box.pack_start(Gtk.Label(label="Real input • Unicode • Clicks • Scroll • Drag"), False, False, 0)
 entry = Gtk.Entry()
 entry.set_placeholder_text("Type the Unicode test here")

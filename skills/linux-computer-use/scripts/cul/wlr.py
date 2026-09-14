@@ -39,8 +39,9 @@ def xkb_keymap():
 
 
 class WlrCapture:
-    def __init__(self, wl, output, transform=0):
+    def __init__(self, wl, output, transform=0, cursor=False):
         self.wl, self.output, self.transform = wl, output, transform
+        self.cursor = cursor
         self.manager = wl.bind("zwlr_screencopy_manager_v1", 1)
         self.shm = wl.bind("wl_shm", 1)
         self.sequence = 0
@@ -74,7 +75,7 @@ class WlrCapture:
 
         frame = self.wl.new(event)
         try:
-            self.wl.send(self.manager, 0, uint(frame, 0, self.output))
+            self.wl.send(self.manager, 0, uint(frame, int(self.cursor), self.output))
             self.wl.until(lambda: result.get("ready") or result.get("failed"), 5)
             if result.get("failed"):
                 raise RuntimeError("Compositor refused screencopy")

@@ -1,6 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — Preview — 2026-09-13
+
+- Add an on-demand local browser spectator for MCP and CLI sessions, including
+  container sessions: live frames, display selection, pause view and confirmed
+  session stop. Closing the view leaves the agent running.
+- Keep spectator capture independent of agent frame IDs and active input,
+  using dedicated display connections or the existing PipeWire sample.
+- Protect spectator sockets by Linux UID and local browser APIs by a random
+  token, Host and Origin checks. No desktop input or application-launch API is
+  exposed through the viewer.
+- Prepare the rootless runtime after image builds, keeping first-run image
+  preparation outside the harness's MCP startup deadline. Add `prepare` for
+  custom images and preserve diagnostic signal forwarding.
 
 - Keep repository documentation focused on the standalone Linux skill. Replace
   the dedicated Omarchy workstation guide and roadmap with general desktop

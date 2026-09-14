@@ -49,7 +49,8 @@ fails explicitly; accessible fields can still use `set_value`.
 
 Display separation does not isolate files or network. The private applications
 are same-user applications. For file isolation, run the supplied Podman image
-with only the work directory mounted. Existing single-instance applications
+with the work directory and a dedicated spectator socket directory mounted.
+Existing single-instance applications
 may need a fresh profile/instance argument to stay in the private session.
 
 ## Native protocol specifications

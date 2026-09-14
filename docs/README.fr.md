@@ -9,7 +9,7 @@ Linux Computer Use est un skill autonome et un contrôleur natif pour les applic
 
 Son mode **bureau privé** crée un écran, un compositeur, un focus, un presse-papiers et des bus de session indépendants. L’agent peut travailler dans ses applications pendant que vous continuez à utiliser les vôtres. Le mode **bureau courant** lui permet plutôt d’agir dans les fenêtres déjà ouvertes, en partageant votre focus et votre curseur.
 
-Cette version `0.1.1` est une préversion : une base de treize rapports E2E passe sur SteamOS et dans de vrais bureaux privés/conteneurisés. La détection du bureau ne certifie pas toutes les configurations matérielles.
+Cette version `0.2.0` est une préversion : une base de treize rapports E2E passe sur SteamOS et dans de vrais bureaux privés/conteneurisés. La détection du bureau ne certifie pas toutes les configurations matérielles.
 
 ## Installer
 
@@ -101,6 +101,20 @@ La capture KWin native atteint une médiane de **2,13 ms** à chaud ; une action
 ```
 
 Réutilisez les mêmes options de répertoires/harness. La mise à jour garde des sauvegardes horodatées. La désinstallation s’appuie sur un manifeste et refuse de supprimer des fichiers modifiés. Les sauvegardes, les images Podman et vos documents sont conservés.
+
+## Regarder le bureau de l’agent
+
+Lancez `linux-computer-use watch` sur votre bureau habituel pour ouvrir la vue
+en direct dans votre navigateur. Choisissez la session et l’écran à observer.
+Vous pouvez agrandir ou suspendre l’affichage et fermer l’onglet pendant que
+l’agent continue à travailler. Votre clavier, votre souris et votre
+presse-papiers restent indépendants en mode privé.
+
+Le bouton **Stop session** demande confirmation, puis arrête les actions et
+ferme les applications du bureau privé ; sauvegardez le travail utile d’abord.
+La vue fonctionne aussi avec le runtime conteneurisé et n’enregistre rien.
+Elle reste locale à l’ordinateur. Les contrôleurs déjà démarrés doivent être
+relancés après la mise à jour. [Détails](../skills/linux-computer-use/references/watching.md).
 
 ## Limites utiles
 

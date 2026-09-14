@@ -79,6 +79,8 @@ def mcp():
             pass
     signal.signal(signal.SIGTERM, terminate)
     signal.signal(signal.SIGINT, terminate)
+    from .watch import enable
+    engine.spectator = enable(engine, lambda: terminate(None, None))
 
     def reader():
         buffered = bytearray()
@@ -165,7 +167,11 @@ def mcp():
                 active["id"] = None
             print(json.dumps(response, ensure_ascii=False, allow_nan=False), flush=True)
     finally:
-        engine.close()
+        try:
+            engine.close()
+        finally:
+            if engine.spectator:
+                engine.spectator.close()
 
 
 class UnixServer(socketserver.ThreadingMixIn, socketserver.UnixStreamServer):
@@ -216,6 +222,8 @@ def serve(path, start):
 
     signal.signal(signal.SIGTERM, terminate)
     signal.signal(signal.SIGINT, terminate)
+    from .watch import enable
+    engine.spectator = enable(engine, lambda: terminate(None, None))
     try:
         info = engine.dispatch("start_session", start)
         ready = path.with_suffix(".ready.json")
@@ -224,7 +232,11 @@ def serve(path, start):
         print(json.dumps({"ready": True, "socket": str(path), **info}), flush=True)
         server.serve_forever(poll_interval=.1)
     finally:
-        engine.close()
+        try:
+            engine.close()
+        finally:
+            if engine.spectator:
+                engine.spectator.close()
         server.server_close()
         path.unlink(missing_ok=True)
         path.with_suffix(".ready.json").unlink(missing_ok=True)

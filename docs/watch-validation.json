@@ -1,0 +1,107 @@
+{
+  "version": "0.2.0",
+  "date": "2026-09-13",
+  "host": "SteamOS 3.8.26, KWin 6.4.3, Python 3.13.5",
+  "container_image_id": "sha256:e4c95efe90f0dff75a397edf5861249b05ffccfaa50803a59dfca3402b4d1e8c",
+  "results": {
+    "native-kwin": {
+      "scope": "Installed native launcher on SteamOS",
+      "source_report": "artifacts/watch-release-kwin/report.json",
+      "status": "passed",
+      "compositor": "kwin",
+      "container_launcher": false,
+      "runtime_sha256": "66269a84fead68d6548d66ababc1d679d2c6ca20ec259cb7085a6394afbab1ca",
+      "checks": [
+        "MCP session advertises spectator availability",
+        "Browser HTTP frame changed after real GTK Unicode input",
+        "Twenty spectator reads do not evict or rescale the agent frame ID",
+        "Animated GTK counter visibly changes while a real drag remains in progress",
+        "Viewer closes and reopens while the same agent session keeps working",
+        "Viewer stop cancels an active drag",
+        "Viewer stop exits MCP and removes spectator discovery"
+      ],
+      "during_drag_frame_ms": 3.77,
+      "stop_ms": 465.8
+    },
+    "container-sway": {
+      "scope": "Installed host launcher to rootless Arch container",
+      "source_report": "artifacts/watch-final-prepared-sway/report.json",
+      "status": "passed",
+      "compositor": "sway",
+      "container_launcher": true,
+      "runtime_sha256": "66269a84fead68d6548d66ababc1d679d2c6ca20ec259cb7085a6394afbab1ca",
+      "checks": [
+        "MCP session advertises spectator availability",
+        "Browser HTTP frame changed after real GTK Unicode input",
+        "Twenty spectator reads do not evict or rescale the agent frame ID",
+        "Animated GTK counter visibly changes while a real drag remains in progress",
+        "Viewer closes and reopens while the same agent session keeps working",
+        "Viewer stop cancels an active drag",
+        "Viewer stop exits MCP and removes spectator discovery"
+      ],
+      "during_drag_frame_ms": 23.08,
+      "stop_ms": 415.42
+    },
+    "container-xvfb": {
+      "scope": "Controller and HTTP test client both inside rootless Arch container",
+      "source_report": "artifacts/watch-release-xvfb/report.json",
+      "status": "passed",
+      "compositor": "xvfb",
+      "container_launcher": false,
+      "runtime_sha256": "66269a84fead68d6548d66ababc1d679d2c6ca20ec259cb7085a6394afbab1ca",
+      "checks": [
+        "MCP session advertises spectator availability",
+        "Browser HTTP frame changed after real GTK Unicode input",
+        "Twenty spectator reads do not evict or rescale the agent frame ID",
+        "Animated GTK counter visibly changes while a real drag remains in progress",
+        "Viewer closes and reopens while the same agent session keeps working",
+        "A crashed capture helper is replaced and live viewing recovers",
+        "Agent stop terminates a frozen preview helper before X11 teardown",
+        "Viewer stop exits MCP and removes spectator discovery"
+      ],
+      "during_drag_frame_ms": 18.3
+    },
+    "cli-kwin": {
+      "scope": "Native CLI controller with HTTP spectator",
+      "source_report": "artifacts/watch-cli-final/report.json",
+      "status": "passed",
+      "transport": "CLI Unix socket",
+      "compositor": "native KWin",
+      "checks": [
+        "Discover CLI private session",
+        "Observe changing real GTK counter over HTTP",
+        "Viewer stop exits CLI and removes discovery"
+      ]
+    }
+  },
+  "browser_acceptance": {
+    "status": "passed",
+    "browser": "Codex in-app Chromium browser",
+    "checks": [
+      "Real private KWin GUI displayed",
+      "Pause and resume view",
+      "Fullscreen",
+      "Page reload retains tab authorization",
+      "Confirmed stop ends controller",
+      "Stopped state shown after session disappears"
+    ],
+    "reviewed_capture": "docs/assets/viewer.png"
+  },
+  "contracts": {
+    "input_transport": 7,
+    "installer": 14,
+    "spectator_boundaries": 3
+  },
+  "startup_investigation": {
+    "observation": "Cold Podman keep-id storage-chown-by-maps preparation ran from +2.00s through +29.06s; initialize arrived intact at +29.39s. Short startup deadlines caused the observed failures.",
+    "resolution": "Build and container install now prepare the exact rootless UID/GID mapping before the harness starts. A rebuilt image and installed wrapper passed the full Sway spectator suite.",
+    "source_diagnosis": "artifacts/watch-stdio-rootcause-twms2z9g/diagnosis.md",
+    "unshipped_experiment": "Removed a speculative stdio readiness proxy; no evidence of lost requests, no action retries introduced."
+  },
+  "limits": [
+    "Spectator changes were not separately tested on a physical Hyprland or Omarchy workstation.",
+    "Current-desktop mode and multimonitor viewer selection were not newly certified by these private-desktop runs.",
+    "No macOS/Windows comparative performance claim.",
+    "Frame latencies are observations during one drag per backend, not broad benchmarks."
+  ]
+}

@@ -18,7 +18,7 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-B8F774?style=flat-square&labelColor=0B0F12&color=B8F774"></a>
   <img alt="MCP stdio and JSON CLI" src="https://img.shields.io/badge/interface-MCP%20%2B%20JSON%20CLI-B8F774?style=flat-square&labelColor=0B0F12&color=B8F774">
   <img alt="Wayland and X11" src="https://img.shields.io/badge/display-Wayland%20%2B%20X11-B8F774?style=flat-square&labelColor=0B0F12&color=B8F774">
-  <img alt="Preview version 0.1.1" src="https://img.shields.io/badge/preview-0.1.1-F2B66D?style=flat-square&labelColor=0B0F12&color=F2B66D">
+  <img alt="Preview version 0.2.0" src="https://img.shields.io/badge/preview-0.2.0-F2B66D?style=flat-square&labelColor=0B0F12&color=F2B66D">
 </p>
 
 ---
@@ -119,7 +119,7 @@ If you install a second harness using the same launcher, use `--update`; the sha
 
 </details>
 
-A checksummed source archive is also available in the [0.1.1 preview release](https://github.com/NuCl34R/computer-use-linux/releases/tag/v0.1.1). Extract it and run `./install.sh` from its directory; the installer does not require Git metadata.
+A checksummed source archive is also available in the [0.2.0 preview release](https://github.com/NuCl34R/computer-use-linux/releases/tag/v0.2.0). Extract it and run `./install.sh` from its directory; the installer does not require Git metadata.
 
 ## Give your agent a desktop
 
@@ -205,6 +205,28 @@ For literal multiline text, use `--json-file request.json`. The socket is mode `
 
 Private display separation is **not a filesystem or network sandbox**. Container mode narrows access to its configured mounts; the shared work directory remains writable. Read the [security model](SECURITY.md) for the exact boundary.
 
+## Watch while the agent works
+
+<img src="docs/assets/viewer.png" alt="Live spectator showing a real GTK application in a private KWin desktop, with pause and stop controls" width="880">
+
+Open the private desktop in your browser whenever you want:
+
+```sh
+linux-computer-use watch
+```
+
+Choose a session and display, watch the live image, pause the view or expand it
+to full screen. The agent keeps its own keyboard, mouse and clipboard. Closing
+the viewer leaves its work running. **Stop session** cancels input and closes
+the owned private applications after confirmation.
+
+The viewer works with MCP and CLI sessions, including rootless containers. It
+runs locally, records nothing and needs only Python and a browser on the host.
+`watch --list` lists sessions; `watch --no-open` prints the local URL. Upgrade
+and restart existing controllers before using the new viewer.
+
+[Viewer controls and local access →](skills/linux-computer-use/references/watching.md)
+
 ## Tested on real desktops
 
 These are application-driven tests: actual GTK callbacks confirm text, clicks, scrolling and dragging. A successful screenshot alone does not count as successful control.
@@ -266,7 +288,7 @@ These measurements characterize this implementation on that machine. **macOS/Win
 - **Accessibility:** AT-SPI trees, bounded queries, semantic actions and stale-reference detection. Screenshots cover apps without accessible controls.
 - **X11:** persistent Xlib/XTEST connections. An XWayland `$DISPLAY` is never treated as full Wayland desktop access.
 - **Lifecycle:** serialized actions, cancellation, input release and an independent guardian for controller-owned processes.
-- **Transport:** stdio and same-user Unix sockets. No TCP listener or model-provider dependency.
+- **Transport:** stdio and same-user Unix sockets; the optional viewer uses authenticated loopback HTTP. No model-provider dependency.
 
 [Architecture and native protocols →](skills/linux-computer-use/references/architecture.md)
 

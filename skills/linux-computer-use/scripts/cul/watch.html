@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0b0f12">
+  <title>Desktop viewer · Linux Computer Use</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f12;
+      --panel: #13191c;
+      --raised: #1b2327;
+      --line: #2c3538;
+      --cream: #f3f0e6;
+      --muted: #a5afac;
+      --lime: #b8f774;
+      --amber: #e9bb78;
+      --radius: 18px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--bg); color: var(--cream); line-height: 1.5; }
+    button, select { font: inherit; }
+    button { cursor: pointer; }
+    button, select { -webkit-tap-highlight-color: transparent; }
+    button:disabled, select:disabled { cursor: default; opacity: .45; }
+    button:focus-visible, select:focus-visible, a:focus-visible, dialog:focus-visible {
+      outline: 3px solid var(--lime); outline-offset: 4px;
+    }
+    button { touch-action: manipulation; }
+    .skip-link { position: fixed; top: -80px; left: 20px; z-index: 10; padding: 12px 18px; background: var(--lime); color: var(--bg); border-radius: 8px; }
+    .skip-link:focus { top: 12px; }
+    .icon-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .icon { width: 19px; height: 19px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+    .shell { width: min(1800px, 100%); margin: 0 auto; padding: 30px clamp(20px, 3vw, 52px) 22px; }
+    .masthead, .brand, .heading, .heading-meta, .viewer-heading, .viewer-title, .viewer-controls, .control-group, .status, .footer-note { display: flex; align-items: center; }
+    .masthead { justify-content: space-between; gap: 20px; padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+    .brand { gap: 12px; font-size: 14px; font-weight: 650; letter-spacing: .01em; }
+    .brand-mark { width: 35px; height: 35px; display: grid; place-items: center; color: var(--lime); border: 1px solid #46553a; border-radius: 10px; background: #1d281c; }
+    .brand-mark .icon { width: 21px; height: 21px; }
+    .brand-divider { color: #596360; font-weight: 400; margin: 0 3px; }
+    .brand-subtitle { color: var(--muted); font-weight: 400; }
+    .view-only { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .view-only .icon { width: 15px; height: 15px; }
+    .heading { justify-content: space-between; align-items: flex-end; gap: 24px; padding: 32px 0 26px; }
+    .eyebrow { margin: 0 0 8px; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 0; font-size: clamp(27px, 2.6vw, 38px); line-height: 1.18; font-weight: 550; letter-spacing: -.04em; }
+    .intro { margin: 9px 0 0; font-size: 14px; color: var(--muted); }
+    .heading-meta { gap: 10px; flex-direction: column; align-items: flex-end; padding-bottom: 1px; }
+    .status { gap: 8px; min-height: 30px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); padding: 5px 11px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex: 0 0 auto; }
+    .status[data-state="live"] { color: var(--lime); border-color: #3a4d2a; background: #192319; }
+    .status[data-state="live"] .status-dot { background: var(--lime); box-shadow: 0 0 0 4px #b8f7740b; }
+    .status:is([data-state="paused"], [data-state="disconnected"], [data-state="busy"], [data-state="stopping"]) { color: var(--amber); border-color: #514332; background: #251f19; }
+    .status:is([data-state="paused"], [data-state="disconnected"], [data-state="busy"], [data-state="stopping"]) .status-dot { background: var(--amber); }
+    .heading-note { color: var(--muted); font-size: 11px; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 20px; align-items: stretch; }
+    .viewer { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; }
+    .viewer-heading { min-height: 61px; gap: 16px; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+    .viewer-title { min-width: 0; gap: 10px; color: var(--muted); }
+    .viewer-title h2 { color: var(--cream); font-weight: 500; font-size: 13px; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .canvas-tag { flex: 0 0 auto; color: var(--muted); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; }
+    .canvas { position: relative; isolation: isolate; display: grid; place-items: center; flex: 1; min-height: 400px; height: clamp(400px, 57vh, 900px); overflow: hidden; background-color: #0d1214; background-image: radial-gradient(#2c393740 .7px, transparent .7px); background-size: 20px 20px; }
+    #frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #080b0d; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+    .canvas[data-stale="true"] #frame { opacity: .65; }
+    .empty { position: relative; max-width: 390px; margin: 38px 26px; text-align: center; }
+    .empty-art { width: 88px; height: 78px; margin: 0 auto 24px; display: grid; place-items: center; position: relative; color: #a8c694; }
+    .empty-art::before { content: ""; position: absolute; inset: 0; background: #b8f77405; border: 1px solid #b8f77416; border-radius: 23px; transform: rotate(-8deg); }
+    .empty-art .icon { width: 42px; height: 42px; stroke-width: 1.1; }
+    .empty h3 { margin: 0 0 9px; font-size: 19px; font-weight: 500; letter-spacing: -.025em; }
+    .empty p { margin: 0; font-size: 13px; line-height: 1.8; color: var(--muted); }
+    .frame-notice { position: absolute; top: 16px; left: 16px; right: 16px; z-index: 1; width: fit-content; max-width: calc(100% - 32px); display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border: 1px solid #695437; border-radius: 9px; background: #201b14f5; color: #f3d7ad; box-shadow: 0 4px 24px #0004; font-size: 12px; }
+    .frame-notice .icon { width: 16px; height: 16px; margin-top: 1px; }
+    .viewer-controls { min-height: 70px; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 13px 16px; border-top: 1px solid var(--line); }
+    .control-group { gap: 7px; flex-wrap: wrap; }
+    .button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 9px; background: transparent; color: var(--cream); font-size: 12px; font-weight: 550; line-height: 1.4; transition: background .15s, border-color .15s; }
+    .button:hover:not(:disabled) { background: var(--raised); border-color: #56605d; }
+    .button-primary { color: #16220e; background: var(--lime); border-color: var(--lime); }
+    .button-primary:hover:not(:disabled) { background: #c8ff8f; border-color: #c8ff8f; }
+    .button-quiet { color: var(--muted); border-color: transparent; }
+    .button-danger { color: var(--amber); border-color: #574431; background: #241e18; }
+    .button-danger:hover:not(:disabled) { background: #33271d; border-color: var(--amber); }
+    .button-danger-solid { background: var(--amber); color: #281b0e; border-color: var(--amber); }
+    .button-danger-solid:hover:not(:disabled) { background: #f2cb97; border-color: #f2cb97; }
+    .button .icon { width: 16px; height: 16px; }
+    .sidebar { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .sidebar-section { padding: 21px; }
+    .sidebar-section + .sidebar-section { border-top: 1px solid var(--line); }
+    .section-label { margin: 0 0 17px; color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 650; }
+    .field + .field { margin-top: 17px; }
+    label { display: block; margin-bottom: 7px; font-size: 12px; color: var(--cream); font-weight: 500; }
+    .select-wrap { position: relative; }
+    .select-wrap > .icon { position: absolute; right: 12px; top: 14px; width: 13px; height: 13px; pointer-events: none; color: var(--muted); }
+    select { appearance: none; width: 100%; min-height: 43px; padding: 10px 33px 10px 12px; border-radius: 9px; border: 1px solid #35403f; background: #0e1416; color: var(--cream); font-size: 12px; text-overflow: ellipsis; }
+    select:hover:not(:disabled) { border-color: #718264; }
+    option { background: var(--panel); color: var(--cream); }
+    .field-hint { margin: 7px 0 0; font-size: 11px; color: var(--muted); }
+    .activity-heading { display: flex; align-items: center; gap: 7px; color: var(--lime); }
+    .activity-heading .icon { width: 14px; height: 14px; }
+    #activity { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.5; }
+    #activity-detail { margin: 7px 0 0; font-size: 12px; line-height: 1.7; color: var(--muted); }
+    .details { margin: 0; display: grid; gap: 12px; }
+    .details > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-size: 12px; }
+    dt { color: var(--muted); }
+    dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+    #frame-dimensions, #last-frame { font-variant-numeric: tabular-nums; }
+    .stop-section { margin-top: auto; }
+    .stop-section p { font-size: 11px; line-height: 1.7; color: var(--muted); margin: 10px 0 0; }
+    #stop { width: 100%; }
+    .footer { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px 25px; margin-top: 19px; color: var(--muted); font-size: 11px; }
+    .footer-note { align-items: flex-start; gap: 8px; margin: 0; }
+    .footer-note .icon { width: 14px; height: 14px; margin-top: 1px; }
+    .footer-meta { margin: 0; color: #929e98; }
+    #feedback { min-height: 18px; margin: 10px 0 0; font-size: 12px; color: var(--amber); }
+    .viewer:fullscreen { width: 100%; height: 100%; border: 0; border-radius: 0; background: var(--bg); }
+    .viewer:fullscreen .canvas { height: auto; min-height: 0; }
+    .viewer:fullscreen .viewer-heading, .viewer:fullscreen .viewer-controls { flex: 0 0 auto; }
+    dialog { width: min(450px, calc(100% - 36px)); padding: 29px; border: 1px solid #5a4a37; border-radius: 20px; background: #171c1d; color: var(--cream); box-shadow: 0 24px 100px #0009; }
+    dialog::backdrop { background: #05080bba; backdrop-filter: blur(5px); }
+    .dialog-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 19px; border: 1px solid #59452f; border-radius: 12px; color: var(--amber); background: #2c2319; }
+    dialog h2 { margin: 0 0 12px; font-size: 23px; line-height: 1.3; font-weight: 550; letter-spacing: -.03em; }
+    dialog p { color: #bdc4bd; font-size: 13px; line-height: 1.8; margin: 0 0 14px; }
+    #stop-session-name { display: block; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 12px; color: var(--cream); overflow-wrap: anywhere; }
+    dialog .dialog-note { font-size: 12px; color: var(--muted); }
+    .dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; margin-top: 23px; }
+    #stop-error { color: var(--amber); margin-bottom: 0; }
+    noscript p { margin: 20px; padding: 20px; color: var(--amber); border: 1px solid var(--line); border-radius: 10px; }
+    @media (min-width: 1500px) { .workspace { grid-template-columns: minmax(0, 1fr) 290px; } .sidebar-section { padding: 24px; } }
+    @media (max-width: 1050px) { .workspace { grid-template-columns: minmax(0, 1fr) 245px; gap: 15px; } .sidebar-section { padding: 17px; } .viewer-controls { padding: 12px; } }
+    @media (max-width: 820px) {
+      .shell { padding: 22px 20px; }
+      .masthead { padding-bottom: 22px; }
+      .heading { padding-top: 25px; }
+      .workspace { grid-template-columns: 1fr; }
+      .canvas { min-height: 330px; height: 53vw; max-height: 650px; }
+      .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
+      .sidebar-section { padding: 20px; }
+      .sidebar-section + .sidebar-section { border-top: 0; }
+      .sidebar-section:nth-child(even) { border-left: 1px solid var(--line); }
+      .sidebar-section:nth-child(n+3) { border-top: 1px solid var(--line); }
+      .stop-section { margin: 0; display: flex; flex-direction: column; justify-content: center; }
+    }
+    @media (max-width: 500px) {
+      .shell { padding: 18px 12px; }
+      .brand { gap: 9px; font-size: 12px; }
+      .brand-subtitle, .brand-divider, .heading-note, .canvas-tag { display: none; }
+      .heading { align-items: flex-start; gap: 12px; }
+      .heading-meta { padding-top: 26px; }
+      h1 { font-size: 27px; }
+      .intro { max-width: 220px; font-size: 12px; }
+      .status { padding: 5px 9px; font-size: 11px; }
+      .canvas { min-height: 285px; height: 65vw; }
+      .viewer-heading { padding: 12px 15px; min-height: 52px; }
+      .viewer-controls { gap: 6px; }
+      .button { min-height: 42px; padding: 9px 11px; }
+      #fullscreen-label { display: none; }
+      .sidebar-section { padding: 17px 14px; }
+      .details > div { gap: 7px; font-size: 11px; }
+      .section-label { font-size: 9px; }
+      #activity { font-size: 14px; }
+      .footer { margin: 17px 5px 0; }
+      dialog { padding: 24px; }
+    }
+    @media (max-width: 350px) { .sidebar { grid-template-columns: 1fr; } .sidebar-section:nth-child(even) { border-left: 0; } .sidebar-section + .sidebar-section { border-top: 1px solid var(--line); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#session-select">Skip to session controls</a>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8V4Z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.2 6.2A8 8 0 0 1 20 12M4 12a8 8 0 0 0 13.8 5.8"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+    <symbol id="i-collapse" viewBox="0 0 24 24"><path d="M3 8h5V3m8 0v5h5M8 21v-5H3m18 0h-5v5"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.01"/></symbol>
+    <symbol id="i-warning" viewBox="0 0 24 24"><path d="m10.3 4.1-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-2.9l-8-14a2 2 0 0 0-3.4 0Z"/><path d="M12 9v5m0 3v.01"/></symbol>
+  </svg>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand"><span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-monitor"/></svg></span><span>Linux Computer Use</span><span class="brand-divider" aria-hidden="true">/</span><span class="brand-subtitle">Spectator</span></div>
+      <span class="view-only"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg>View only</span>
+    </header>
+    <main>
+      <div class="heading">
+        <div><p class="eyebrow">A window into the work</p><h1>Desktop viewer</h1><p class="intro">Follow the agent’s desktop as it works.</p></div>
+        <div class="heading-meta"><div class="status" id="status-badge" data-state="connecting"><span class="status-dot" aria-hidden="true"></span><span id="connection-state" role="status" aria-live="polite" aria-atomic="true">Connecting</span></div><span class="heading-note">On-demand viewing</span></div>
+      </div>
+      <div class="workspace">
+        <section class="viewer" id="viewer" aria-label="Desktop view">
+          <div class="viewer-heading"><div class="viewer-title"><svg class="icon" aria-hidden="true"><use href="#i-monitor"/></svg><h2 id="display-title">Desktop preview</h2></div><span class="canvas-tag">View only · Fit to window</span></div>
+          <div class="canvas" id="canvas" data-stale="false">
+            <img id="frame" alt="Desktop snapshot" draggable="false" hidden>
+            <div class="empty" id="empty-state">
+              <div class="empty-art"><svg class="icon" aria-hidden="true"><use href="#i-monitor"/></svg></div>
+              <h3 id="empty-title">Connecting to your desktop</h3>
+              <p id="empty-description">Looking for available sessions. Your agent can keep working while you watch.</p>
+            </div>
+            <div class="frame-notice" id="frame-notice" hidden><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span id="frame-notice-text"></span></div>
+          </div>
+          <div class="viewer-controls" role="group" aria-label="View controls">
+            <div class="control-group">
+              <button class="button button-primary" id="pause" type="button" aria-pressed="false" aria-describedby="view-help" disabled><svg class="icon" aria-hidden="true"><use id="pause-icon" href="#i-pause"/></svg><span id="pause-label">Pause view</span></button>
+              <button class="button button-quiet" id="refresh" type="button" title="Refresh session details and the live view" disabled><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Refresh</button>
+            </div>
+            <button class="button button-quiet" id="fullscreen" type="button" aria-label="Enter full screen" title="Enter full screen" disabled><svg class="icon" aria-hidden="true"><use id="fullscreen-icon" href="#i-expand"/></svg><span id="fullscreen-label">Full screen</span></button>
+          </div>
+        </section>
+        <aside class="sidebar" aria-label="Session details and controls">
+          <section class="sidebar-section">
+            <h2 class="section-label">Your connection</h2>
+            <div class="field"><label for="session-select">Session</label><div class="select-wrap"><select id="session-select" aria-describedby="session-count" disabled><option value="">Finding sessions…</option></select><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></div><p class="field-hint" id="session-count">Checking availability</p></div>
+            <div class="field"><label for="display-select">Display</label><div class="select-wrap"><select id="display-select" disabled><option value="">No display yet</option></select><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></div></div>
+          </section>
+          <section class="sidebar-section">
+            <h2 class="section-label activity-heading"><svg class="icon" aria-hidden="true"><use href="#i-activity"/></svg>Agent activity</h2>
+            <p id="activity">Waiting for a connection</p><p id="activity-detail">Activity will appear when a session is available.</p>
+          </section>
+          <section class="sidebar-section">
+            <h2 class="section-label">At a glance</h2>
+            <dl class="details"><div><dt>Session state</dt><dd id="session-state">—</dd></div><div><dt>Desktop</dt><dd id="desktop-mode">—</dd></div><div><dt>Environment</dt><dd id="transport">—</dd></div><div><dt>Frame size</dt><dd id="frame-dimensions">—</dd></div><div><dt>Last received</dt><dd id="last-frame">—</dd></div></dl>
+          </section>
+          <section class="sidebar-section stop-section"><button class="button button-danger" id="stop" type="button" aria-haspopup="dialog" disabled><svg class="icon" aria-hidden="true"><use href="#i-stop"/></svg>Stop session</button><p id="stop-hint">Ends this desktop session and closes its owned apps.</p></section>
+        </aside>
+      </div>
+      <footer class="footer"><p class="footer-note" id="view-help"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>Pausing the view or closing this tab leaves the agent running.</p><p class="footer-meta">No desktop input · No recording</p></footer>
+      <p id="feedback" role="status" aria-live="polite"></p>
+    </main>
+  </div>
+  <dialog id="stop-dialog" aria-labelledby="stop-title" aria-describedby="stop-description stop-alternative">
+    <div class="dialog-icon"><svg class="icon" aria-hidden="true"><use href="#i-warning"/></svg></div>
+    <h2 id="stop-title">Stop this session?</h2>
+    <p id="stop-description">Apps owned by this session will close. <strong>Unsaved work can be lost.</strong> The agent will no longer be able to use this desktop session.</p>
+    <p id="stop-session-name"></p>
+    <p class="dialog-note" id="stop-alternative">Just finished watching? Close this tab or pause the view to leave the agent running.</p>
+    <p id="stop-error" role="alert" hidden></p>
+    <div class="dialog-actions"><button class="button" id="cancel-stop" type="button" autofocus>Keep running</button><button class="button button-danger-solid" id="stop-confirm" type="button">Stop session</button></div>
+  </dialog>
+  <noscript><p>JavaScript is needed to view this desktop. Closing this tab will not stop the agent.</p></noscript>
+  <script>
+    (() => {
+      "use strict";
+
+      // The token stays in this tab's storage, never in requests' URLs or logs.
+      const storageKey = "linux-computer-use.viewer.token";
+      const fragment = new URLSearchParams(location.hash.slice(1));
+      let token = fragment.get("token") || "";
+      try {
+        if (fragment.has("token")) {
+          if (token) sessionStorage.setItem(storageKey, token);
+          else sessionStorage.removeItem(storageKey);
+        } else {
+          token = sessionStorage.getItem(storageKey) || "";
+        }
+      } catch (_) { /* Storage may be disabled; this visit can still use the link. */ }
+      if (location.hash) history.replaceState(history.state, "", location.pathname + location.search);
+
+      const $ = (id) => document.getElementById(id);
+      const ui = {
+        sessions: $("session-select"), displays: $("display-select"), pause: $("pause"),
+        pauseLabel: $("pause-label"), pauseIcon: $("pause-icon"), refresh: $("refresh"),
+        stopHint: $("stop-hint"), stopDescription: $("stop-description"), stop: $("stop"), confirm: $("stop-confirm"), cancel: $("cancel-stop"),
+        dialog: $("stop-dialog"), stopName: $("stop-session-name"), stopError: $("stop-error"),
+        frame: $("frame"), canvas: $("canvas"), empty: $("empty-state"),
+        emptyTitle: $("empty-title"), emptyDescription: $("empty-description"),
+        notice: $("frame-notice"), noticeText: $("frame-notice-text"),
+        badge: $("status-badge"), connection: $("connection-state"),
+        activity: $("activity"), activityDetail: $("activity-detail"),
+        sessionState: $("session-state"), mode: $("desktop-mode"), transport: $("transport"),
+        dimensions: $("frame-dimensions"), lastFrame: $("last-frame"),
+        displayTitle: $("display-title"), count: $("session-count"), feedback: $("feedback"),
+        viewer: $("viewer"), fullscreen: $("fullscreen"),
+        fullscreenIcon: $("fullscreen-icon"), fullscreenLabel: $("fullscreen-label")
+      };
+      const states = { waiting: "Waiting", running: "Running", stopping: "Stopping", stopped: "Stopped" };
+      const activities = {
+        doctor: "Checking the desktop", start_session: "Preparing the desktop",
+        info: "Checking the session", list_apps: "Checking open apps", list_windows: "Checking open windows",
+        get_state: "Looking at the desktop", screenshot: "Looking at the desktop",
+        launch_app: "Opening an app", focus_window: "Switching windows", focus_element: "Selecting a field",
+        move: "Moving the pointer", move_relative: "Moving the pointer", click: "Selecting an item",
+        press_key: "Using the keyboard", type_text: "Entering text", scroll: "Scrolling",
+        drag: "Moving an item", perform_action: "Using an app", set_value: "Updating a field",
+        batch: "Working through a task", stop: "Closing session apps"
+      };
+      const sessionInterval = 2000;
+      const frameInterval = 200;
+      const requestTimeout = 8000;
+      let sessions = [];
+      let sessionsLoaded = false;
+      let sessionsDisconnected = false;
+      let accessDenied = false;
+      let selectedSession = new URLSearchParams(location.search).get("session") || "";
+      let selectedDisplay = "";
+      let paused = false;
+      let pageActive = true;
+      let generation = 0;
+      let frameStatus = "waiting";
+      let hasFrame = false;
+      let frameHash = "";
+      let frameSize = "—";
+      let lastReceived = null;
+      let frameActivity = null;
+      let hasFrameActivity = false;
+      let timer = null;
+      let inFlight = null;
+      let nextSessions = 0;
+      let nextFrame = 0;
+      let lastSessionStart = -Infinity;
+      let lastFrameStart = -Infinity;
+      let stopTarget = null;
+      let queuedStop = null;
+      let stopPending = false;
+      const terminalStates = new Map();
+      const clock = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+      function text(element, value) {
+        if (element.textContent !== value) element.textContent = value;
+      }
+      function currentSession() { return sessions.find((session) => session.session_id === selectedSession); }
+      function currentDisplay() { return currentSession()?.displays.find((display) => String(display.id) === selectedDisplay); }
+      function sessionState(session) { return session ? terminalStates.get(session.session_id) || session.state : null; }
+      function shortId(id) { return id.length > 20 ? id.slice(0, 12) + "…" + id.slice(-5) : id; }
+      function size(width, height) {
+        return Number.isInteger(width) && width > 0 && Number.isInteger(height) && height > 0 ? `${width} × ${height}` : "—";
+      }
+      function displayName(display, index = 0) {
+        return typeof display?.name === "string" && display.name.trim() ? display.name : `Display ${index + 1}`;
+      }
+      function activityLabel(name) {
+        // Unknown tool names and all arguments deliberately stay out of the UI.
+        const key = typeof name === "string" ? name.split("__").pop() : "";
+        return Object.hasOwn(activities, key) ? activities[key] : key ? "Working on the desktop" : "Waiting for the next action";
+      }
+      function canCapture() {
+        const state = sessionState(currentSession());
+        return token && !accessDenied && pageActive && !document.hidden && !paused &&
+          currentDisplay() && (state === "waiting" || state === "running");
+      }
+      function abortFrame() {
+        generation += 1;
+        if (inFlight?.kind === "frame") inFlight.controller.abort();
+      }
+      function clearFrame() {
+        abortFrame();
+        ui.frame.hidden = true;
+        ui.frame.removeAttribute("src");
+        hasFrame = false;
+        frameHash = "";
+        frameSize = "—";
+        lastReceived = null;
+        frameActivity = null;
+        hasFrameActivity = false;
+        frameStatus = "waiting";
+        nextFrame = Math.max(performance.now(), lastFrameStart + frameInterval);
+      }
+      function setOptions(select, entries, value) {
+        // Leave unchanged native selects intact so polling doesn't interrupt keyboard use.
+        const signature = JSON.stringify(entries);
+        if (select.dataset.options !== signature) {
+          const options = document.createDocumentFragment();
+          for (const [id, label] of entries) {
+            const option = document.createElement("option");
+            option.value = id;
+            option.textContent = label;
+            options.append(option);
+          }
+          select.replaceChildren(options);
+          select.dataset.options = signature;
+        }
+        if (select.value !== value) select.value = value;
+      }
+      function syncSelectors() {
+        const entries = sessions.map((session) => [session.session_id, `${shortId(session.session_id)} · ${states[sessionState(session)]}`]);
+        if (selectedSession && !currentSession()) entries.unshift([selectedSession, `${shortId(selectedSession)} · ${terminalStates.get(selectedSession) === "stopped" ? "Stopped" : "Unavailable"}`]);
+        if (!entries.length) entries.push(["", sessionsLoaded ? "No sessions available" : "Finding sessions…"]);
+        setOptions(ui.sessions, entries, selectedSession);
+        const displays = currentSession()?.displays || [];
+        const displayEntries = displays.map((display, index) => {
+          const dimensions = size(display.width, display.height);
+          return [String(display.id), displayName(display, index) + (dimensions === "—" ? "" : ` · ${dimensions}`)];
+        });
+        setOptions(ui.displays, displayEntries.length ? displayEntries : [["", "No display yet"]], selectedDisplay);
+        text(ui.count, sessionsLoaded ? `${sessions.length} ${sessions.length === 1 ? "session" : "sessions"} available` : "Checking availability");
+      }
+      function reconcileSessions(list) {
+        const previous = currentSession();
+        const previousDisplay = currentDisplay();
+        const seen = new Set();
+        sessions = list.filter((session) => {
+          if (!session || typeof session.session_id !== "string" || !session.session_id ||
+              !Object.hasOwn(states, session.state) || seen.has(session.session_id)) return false;
+          seen.add(session.session_id);
+          return true;
+        }).map((session) => ({
+          ...session,
+          displays: Array.isArray(session.displays) ? session.displays.filter((display) => display &&
+            ((Number.isInteger(display.id) && display.id >= 0) || (typeof display.id === "string" && /^\d+$/.test(display.id)))) : []
+        }));
+        for (const session of sessions) {
+          if (session.state === "stopped" || (session.state === "stopping" && terminalStates.get(session.session_id) !== "stopped")) {
+            terminalStates.set(session.session_id, session.state);
+          }
+        }
+        for (const [id, state] of terminalStates) {
+          if (state === "stopping" && !seen.has(id)) {
+            terminalStates.set(id, "stopped");
+            if (id === selectedSession) text(ui.feedback, "Session ended. You can choose another desktop to watch.");
+          }
+        }
+        // A missing selected session stays selected; never silently show another desktop.
+        if (!selectedSession && sessions.length) {
+          selectedSession = (sessions.find((session) => session.state === "running") ||
+            sessions.find((session) => session.state === "waiting") || sessions[0]).session_id;
+        }
+        const session = currentSession();
+        const display = currentDisplay();
+        if (!session || !display || previous?.session_id !== session.session_id) {
+          if (hasFrame || previousDisplay || previous?.session_id !== session?.session_id) clearFrame();
+          selectedDisplay = session?.displays.length ? String(session.displays[0].id) : "";
+        } else if (previousDisplay && (previousDisplay.name !== display.name || previousDisplay.width !== display.width || previousDisplay.height !== display.height)) {
+          clearFrame();
+        }
+        hasFrameActivity = false;
+        syncSelectors();
+      }
+
+      function presentation() {
+        const session = currentSession();
+        const state = sessionState(session);
+        if (!token) return ["disconnected", "Access needed", "Open your viewer link", "Use the viewer link supplied for this desktop session. It includes access for this tab."];
+        if (accessDenied) return ["disconnected", "Access expired", "This viewer link is no longer valid", "Open a fresh viewer link to reconnect. The agent may still be running."];
+        if (sessionsDisconnected) return ["disconnected", "Disconnected", "Connection interrupted", "Reconnecting automatically. The agent may still be running."];
+        if (!sessionsLoaded) return ["connecting", "Connecting", "Connecting to your desktop", "Looking for available sessions. Your agent can keep working while you watch."];
+        if (!session && selectedSession && terminalStates.get(selectedSession) === "stopped") return ["stopped", "Stopped", "This session has ended", "Choose another session to follow the next desktop."];
+        if (!session && selectedSession) return ["empty", "Unavailable", "Session unavailable", "This session is no longer available. Choose another session, or wait for it to reconnect."];
+        if (!session) return ["empty", "No sessions", "A desktop will appear here", "There are no sessions to watch yet. This page will connect when an agent starts one."];
+        if (state === "stopped") return ["stopped", "Stopped", "This session has ended", "Choose another session to follow the next desktop."];
+        if (state === "stopping") return ["stopping", "Stopping", "The session is closing", "Apps owned by this session are closing. This may take a moment."];
+        if (paused) return ["paused", "Paused", "Your view is paused", "The agent is still running. Resume the view to see its latest work."];
+        if (document.hidden) return ["paused", "View suspended", "Your view is suspended", "The agent keeps running. Live frames resume when this tab is visible."];
+        if (state === "waiting") return ["waiting", "Waiting", "The desktop is getting ready", "The session is waiting for a desktop. Live frames will appear here when it is ready."];
+        if (!currentDisplay()) return ["empty", "No display", "Waiting for a display", "This session has no display available yet. Checking automatically."];
+        if (frameStatus === "error") return ["disconnected", "Disconnected", "Connection interrupted", "Reconnecting automatically. The agent may still be running."];
+        if (frameStatus === "busy") return ["busy", "Desktop busy", "The agent is working", "New frames will arrive when the desktop is ready. The agent is still running."];
+        if (hasFrame && frameStatus === "ready") return ["live", "Live", "", ""];
+        return ["connecting", "Connecting", "Waiting for a live frame", "The desktop is connected. Its next frame will appear here automatically."];
+      }
+      function render() {
+        const session = currentSession();
+        const state = sessionState(session);
+        const display = currentDisplay();
+        const [kind, label, title, description] = presentation();
+        ui.badge.dataset.state = kind;
+        text(ui.connection, label);
+        text(ui.emptyTitle, title);
+        text(ui.emptyDescription, description);
+        ui.empty.hidden = hasFrame;
+        ui.frame.hidden = !hasFrame;
+        ui.canvas.dataset.stale = String(hasFrame && kind !== "live");
+        ui.notice.hidden = !hasFrame || kind === "live";
+        const notices = {
+          disconnected: accessDenied ? "Last frame · Access expired. Open a fresh viewer link." : "Last frame · Disconnected. Reconnecting automatically.",
+          paused: paused ? "View paused · The agent is still running." : "View suspended · The agent is still running.",
+          busy: "Last frame · The desktop is busy. Waiting for a fresh frame.",
+          stopping: "Last frame · This session is closing its apps.",
+          stopped: "Last frame · This session has ended.",
+          waiting: "Last frame · Waiting for the desktop to be ready.",
+          connecting: "Last frame · Waiting for a fresh frame."
+        };
+        text(ui.noticeText, notices[kind] || "Last frame · This view is no longer live.");
+        const displayIndex = session?.displays.indexOf(display) ?? 0;
+        text(ui.displayTitle, display ? displayName(display, displayIndex) : "Desktop preview");
+        ui.frame.alt = kind === "live" ? "Live desktop view" : "Last received desktop snapshot";
+        text(ui.dimensions, frameSize);
+        text(ui.lastFrame, lastReceived ? clock.format(lastReceived) : "—");
+        text(ui.sessionState, session ? (sessionsDisconnected || accessDenied ? "Unknown" : states[state]) : "—");
+        text(ui.mode, session?.mode === "isolated" ? "Private" : session?.mode === "current" ? "Shared" : "—");
+        text(ui.transport, session?.transport === "container" ? "Container" : session?.transport === "native" ? "Native" : "—");
+        text(ui.activity, !session ? "Waiting for a session" : sessionsDisconnected || accessDenied ? "Activity unavailable" :
+          state === "stopped" ? "Session ended" : state === "stopping" ? "Closing session apps" :
+          state === "waiting" ? "Preparing the desktop" : activityLabel(hasFrameActivity ? frameActivity : session.activity));
+        text(ui.activityDetail, !session ? "Activity will appear when a session is available." :
+          sessionsDisconnected || accessDenied ? "Reconnect to see the agent’s current activity." :
+          state === "stopped" ? "This desktop is no longer running." : state === "stopping" ? "Waiting for the session to finish closing." :
+          paused ? "Only your view is paused. The agent keeps working." : "You’re watching. Desktop input stays with the agent.");
+        const usable = Boolean(token) && !accessDenied;
+        ui.sessions.disabled = !sessions.length || ui.dialog.open;
+        ui.displays.disabled = !session?.displays.length || ui.dialog.open;
+        ui.pause.disabled = !session || !usable || state === "stopped" || state === "stopping";
+        ui.pause.setAttribute("aria-pressed", String(paused));
+        ui.pauseIcon.setAttribute("href", paused ? "#i-play" : "#i-pause");
+        text(ui.pauseLabel, paused ? "Resume view" : "Pause view");
+        ui.pause.title = paused ? "Resume live frames" : "Pause live frames; the agent keeps running";
+        ui.refresh.disabled = !usable || stopPending;
+        ui.refresh.title = paused ? "Refresh session details; resume the view for new frames" : "Refresh session details and the live view";
+        ui.stop.disabled = !session || !usable || sessionsDisconnected || state === "stopped" || state === "stopping" || stopPending;
+        text(ui.stopHint, session?.mode === "current" ? "Stops agent input. Your existing desktop apps stay open." : "Ends this private desktop session and closes its apps.");
+        const target = sessions.find((item) => item.session_id === stopTarget);
+        text(ui.stopDescription, target?.mode === "current" ? "Agent input will stop. Your existing desktop applications stay open. The agent will no longer be able to use this session." : "Apps in this private desktop will close. Unsaved work can be lost. The agent will no longer be able to use this desktop session.");
+        const targetState = sessionState(target);
+        ui.confirm.disabled = stopPending || !usable || sessionsDisconnected || !target || targetState === "stopped" || targetState === "stopping";
+        ui.cancel.disabled = stopPending;
+        text(ui.confirm, stopPending ? "Stopping…" : "Stop session");
+        text(ui.cancel, targetState === "stopping" || targetState === "stopped" ? "Close" : "Keep running");
+        ui.fullscreen.disabled = !document.fullscreenEnabled || typeof ui.viewer.requestFullscreen !== "function";
+      }
+
+      function schedule(delay = 0) {
+        clearTimeout(timer);
+        if (pageActive) timer = setTimeout(pump, delay);
+      }
+      async function request(path, controller, body) {
+        const response = await fetch(path, {
+          method: body ? "POST" : "GET",
+          headers: { Accept: "application/json", Authorization: `Bearer ${token}`, ...(body ? { "Content-Type": "application/json" } : {}) },
+          ...(body ? { body: JSON.stringify(body) } : {}),
+          cache: "no-store", credentials: "omit", mode: "same-origin", redirect: "error",
+          referrerPolicy: "no-referrer", signal: controller.signal
+        });
+        if (!response.ok) {
+          const error = new Error("Viewer request failed");
+          error.status = response.status;
+          throw error;
+        }
+        return response.json();
+      }
+      function decodeImage(image, signal) {
+        if (!image || !["image/png", "image/jpeg", "image/webp", "image/avif"].includes(image.mimeType) ||
+            typeof image.data !== "string" || !image.data || size(image.width, image.height) === "—") {
+          return Promise.reject(new Error("Invalid desktop frame"));
+        }
+        return new Promise((resolve, reject) => {
+          const candidate = new Image();
+          const cleanup = () => {
+            candidate.onload = null;
+            candidate.onerror = null;
+            signal.removeEventListener("abort", abort);
+          };
+          const abort = () => {
+            cleanup();
+            candidate.removeAttribute("src");
+            reject(new DOMException("Frame cancelled", "AbortError"));
+          };
+          candidate.onload = () => { cleanup(); resolve(candidate); };
+          candidate.onerror = () => { cleanup(); reject(new Error("Unreadable desktop frame")); };
+          if (signal.aborted) { abort(); return; }
+          signal.addEventListener("abort", abort, { once: true });
+          candidate.src = `data:${image.mimeType};base64,${image.data}`;
+        });
+      }
+      function rememberState(id, state) {
+        const session = sessions.find((item) => item.session_id === id);
+        if (!Object.hasOwn(states, state)) return;
+        if (state === "stopped" || (state === "stopping" && terminalStates.get(id) !== "stopped")) terminalStates.set(id, state);
+        if (session) session.state = state;
+      }
+      async function receiveFrame(controller, version, sessionId, displayId) {
+        const query = new URLSearchParams({ session: sessionId, display: displayId });
+        const result = await request(`/api/frame?${query}`, controller);
+        if (version !== generation || !canCapture()) return;
+        if (!result || !Object.hasOwn(states, result.state)) throw new Error("Invalid frame response");
+        rememberState(sessionId, result.state);
+        frameActivity = result.activity;
+        hasFrameActivity = true;
+        if (result.error) throw new Error("Desktop frame unavailable");
+        if (result.image) {
+          const hash = typeof result.image.sha256 === "string" ? result.image.sha256 : "";
+          if (!hasFrame || !hash || hash !== frameHash) {
+            const candidate = await decodeImage(result.image, controller.signal);
+            // Both fetch and image decoding can finish after a selection change.
+            if (version !== generation || paused || document.hidden || !pageActive) return;
+            ui.frame.src = candidate.src;
+            frameHash = hash;
+            frameSize = size(result.image.width, result.image.height);
+            hasFrame = true;
+          }
+          lastReceived = new Date();
+          frameStatus = result.busy ? "busy" : "ready";
+        } else {
+          frameStatus = result.busy ? "busy" : "waiting";
+        }
+        syncSelectors();
+      }
+      async function sendStop(controller, id) {
+        const result = await request("/api/stop", controller, { session: id });
+        if (!result || result.stopping !== true) throw new Error("Unconfirmed stop request");
+        rememberState(id, "stopping");
+        if (selectedSession === id) abortFrame();
+        ui.dialog.close();
+        text(ui.feedback, "Stop requested. Waiting for the session to close its apps.");
+        syncSelectors();
+      }
+      async function pump() {
+        if (inFlight || !pageActive || !token || accessDenied) return;
+        const now = performance.now();
+        let kind;
+        let id;
+        if (queuedStop) {
+          kind = "stop";
+          id = queuedStop;
+          queuedStop = null;
+        } else if (now >= nextSessions) {
+          kind = "sessions";
+          lastSessionStart = now;
+          nextSessions = now + sessionInterval;
+        } else if (canCapture() && now >= nextFrame) {
+          kind = "frame";
+          lastFrameStart = now;
+          nextFrame = now + frameInterval;
+        } else {
+          schedule(Math.max(20, Math.min(nextSessions, canCapture() ? nextFrame : Infinity) - now));
+          return;
+        }
+        // One queue serializes ALL API requests, including refreshes and confirmed stops.
+        const controller = new AbortController();
+        const version = generation;
+        let timedOut = false;
+        inFlight = { kind, controller };
+        const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, requestTimeout);
+        try {
+          if (kind === "sessions") {
+            const result = await request("/api/sessions", controller);
+            if (!result || !Array.isArray(result.sessions)) throw new Error("Invalid session response");
+            sessionsLoaded = true;
+            sessionsDisconnected = false;
+            reconcileSessions(result.sessions);
+          } else if (kind === "frame") {
+            await receiveFrame(controller, version, selectedSession, selectedDisplay);
+          } else {
+            await sendStop(controller, id);
+          }
+        } catch (error) {
+          if (error.status === 401 || error.status === 403) {
+            accessDenied = true;
+            try { sessionStorage.removeItem(storageKey); } catch (_) { /* Optional storage. */ }
+            if (queuedStop) {
+              queuedStop = null;
+              stopPending = false;
+            }
+            if (ui.dialog.open) {
+              text(ui.stopError, "Access expired. Open a fresh viewer link to check this session’s state.");
+              ui.stopError.hidden = false;
+            }
+          }
+          if (kind === "stop") {
+            text(ui.stopError, accessDenied ? "Access expired. Open a fresh viewer link to check whether this session stopped." :
+              "The server did not confirm the stop. The session may already be closing. Check its state before trying again.");
+            ui.stopError.hidden = false;
+          } else if (!controller.signal.aborted || timedOut) {
+            if (kind === "sessions") sessionsDisconnected = true;
+            else if (version === generation) frameStatus = "error";
+          }
+        } finally {
+          clearTimeout(timeout);
+          inFlight = null;
+          if (kind === "stop") stopPending = false;
+          // Completion-based spacing avoids bursts after slow responses or cancellation.
+          if (kind === "frame") nextFrame = Math.max(nextFrame, performance.now() + (frameStatus === "error" ? 1000 : frameInterval));
+          render();
+          schedule();
+        }
+      }
+
+      ui.sessions.addEventListener("change", () => {
+        clearFrame();
+        selectedSession = ui.sessions.value;
+        selectedDisplay = currentSession()?.displays.length ? String(currentSession().displays[0].id) : "";
+        text(ui.feedback, "");
+        syncSelectors();
+        render();
+        schedule();
+      });
+      ui.displays.addEventListener("change", () => {
+        clearFrame();
+        selectedDisplay = ui.displays.value;
+        text(ui.feedback, "");
+        render();
+        schedule();
+      });
+      ui.pause.addEventListener("click", () => {
+        paused = !paused;
+        abortFrame();
+        if (!paused) frameStatus = "waiting";
+        text(ui.feedback, paused ? "View paused. The agent is still running." : "Resuming live frames.");
+        render();
+        schedule();
+      });
+      ui.refresh.addEventListener("click", () => {
+        // Explicit refresh respects both polling limits and never overrides a paused view.
+        nextSessions = Math.max(performance.now(), lastSessionStart + sessionInterval);
+        nextFrame = Math.max(performance.now(), lastFrameStart + frameInterval);
+        text(ui.feedback, paused ? "Refreshing session details. Your view stays paused; the agent keeps running." : "Checking for fresh session details and frames.");
+        schedule();
+      });
+      document.addEventListener("visibilitychange", () => {
+        abortFrame();
+        if (!paused) frameStatus = "waiting";
+        render();
+        schedule();
+      });
+      ui.stop.addEventListener("click", () => {
+        const session = currentSession();
+        if (!session || ui.stop.disabled) return;
+        stopTarget = session.session_id;
+        text(ui.stopName, `Session ${stopTarget}`);
+        ui.stopError.hidden = true;
+        text(ui.stopError, "");
+        ui.dialog.showModal();
+        render();
+        ui.cancel.focus();
+      });
+      ui.cancel.addEventListener("click", () => { if (!stopPending) ui.dialog.close(); });
+      ui.dialog.addEventListener("cancel", (event) => { if (stopPending) event.preventDefault(); });
+      ui.dialog.addEventListener("close", () => {
+        stopTarget = null;
+        render();
+        if (!ui.stop.disabled) ui.stop.focus();
+        else ui.sessions.focus();
+      });
+      ui.confirm.addEventListener("click", () => {
+        if (ui.confirm.disabled || !stopTarget || stopPending) return;
+        // This is the only path that queues a stop. The dialog's target is immutable.
+        queuedStop = stopTarget;
+        stopPending = true;
+        ui.stopError.hidden = true;
+        if (inFlight && inFlight.kind !== "stop") inFlight.controller.abort();
+        render();
+        schedule();
+      });
+      ui.fullscreen.addEventListener("click", async () => {
+        try {
+          if (document.fullscreenElement === ui.viewer) await document.exitFullscreen();
+          else await ui.viewer.requestFullscreen();
+        } catch (_) {
+          text(ui.feedback, "Full screen is unavailable in this browser. You can keep watching here.");
+        }
+      });
+      document.addEventListener("fullscreenchange", () => {
+        const expanded = document.fullscreenElement === ui.viewer;
+        const label = expanded ? "Exit full screen" : "Enter full screen";
+        ui.fullscreen.setAttribute("aria-label", label);
+        ui.fullscreen.title = label;
+        text(ui.fullscreenLabel, expanded ? "Exit full screen" : "Full screen");
+        ui.fullscreenIcon.setAttribute("href", expanded ? "#i-collapse" : "#i-expand");
+      });
+      // Navigation only suspends viewing. It never sends a stop or desktop input.
+      window.addEventListener("pagehide", () => {
+        pageActive = false;
+        clearTimeout(timer);
+        abortFrame();
+        if (inFlight?.kind === "sessions") inFlight.controller.abort();
+      });
+      window.addEventListener("pageshow", () => {
+        pageActive = true;
+        if (!paused) frameStatus = "waiting";
+        render();
+        schedule();
+      });
+      render();
+      schedule();
+    })();
+  </script>
+</body>
+</html>

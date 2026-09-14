@@ -2,6 +2,26 @@
 
 [← Repository home](../README.md) · [French detailed baseline](../skills/linux-computer-use/references/validation.md)
 
+## Preview 0.2.0 · Live spectator
+
+The [spectator validation record](watch-validation.json) covers real private
+KWin, Sway and Xvfb sessions, plus the CLI controller and browser interface.
+Frames changed during active dragging; spectator reads preserved the agent's
+frame IDs; closing and reopening the viewer left the agent working. Confirmed
+stop cancelled active input and removed session discovery. X11 checks also
+verified recovery after a capture-helper crash and cleanup of a frozen helper.
+
+Three access-boundary tests cover UID/private-directory rules and HTTP token,
+Host and Origin checks. The browser was also exercised against a real KWin
+desktop, including pause, fullscreen, reload and the final stopped state.
+
+Cold rootless Podman preparation took about 29 seconds in the investigated
+failure, exceeding the old startup deadline. Image build and installation now
+prepare the exact user mapping before MCP connection; the rebuilt image passed
+the installed Sway launcher suite. No request-loss workaround or action retry
+was retained. This release adds no new physical Hyprland/Omarchy certification
+or comparison with macOS/Windows.
+
 ## Preview 0.1.1 · September 13, 2026
 
 The [0.1.1 checks](preview-0.1.1-validation.json) cover 14 installer contracts,
@@ -100,7 +120,7 @@ podman run --rm --read-only --network=none --userns=keep-id \
   --env CUL_TEST_ENTRY=/opt/cul/cul.py \
   --tmpfs /tmp:rw,exec,mode=1777 --tmpfs /run:rw,mode=755 \
   -v "$PWD:/work:ro" -v "$PWD/artifacts/container-sway:/results:rw" \
-  --workdir /work localhost/linux-computer-use:0.1.1 \
+  --workdir /work localhost/linux-computer-use:0.2.0 \
   python3 tests/e2e.py --compositor sway --output /results
 ```
 
