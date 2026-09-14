@@ -79,7 +79,7 @@ A fresh install into a separate directory on SteamOS passed the full native KWin
 Both actual installed launchers also passed the GTK/MCP acceptance test: native
 KWin and rootless container Sway. See [installer results](installer-validation.json).
 
-The [GitHub Actions workflow](../.github/workflows/ci.yml) installs system libraries on Ubuntu 24.04, runs the installer/contracts/docs checks, installs a standalone skill and drives real private Sway and Xvfb sessions through MCP. Workflow results are available under [Actions](https://github.com/NuCl34R/computer-use-linux/actions). The first corrected run passed on both Sway and Xvfb: [recorded CI evidence](ci-validation.json). CI does not substitute for testing a physical workstation’s compositor, GPU, scaling and applications.
+The [GitHub Actions workflow](../.github/workflows/ci.yml) installs system libraries on Ubuntu 24.04, runs the installer/contracts/docs checks, installs a standalone skill and drives real private Sway and Xvfb sessions through MCP. Workflow results are available under [Actions](https://github.com/NuCl34R/linux-computer-use/actions). The first corrected run passed on both Sway and Xvfb: [recorded CI evidence](ci-validation.json). CI does not substitute for testing a physical workstation’s compositor, GPU, scaling and applications.
 
 ## Measurement method
 

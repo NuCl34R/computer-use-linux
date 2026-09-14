@@ -42,8 +42,8 @@ Its defining feature is a **private desktop**: the agent gets its own compositor
 Clone the repository and review the detected installation plan:
 
 ```sh
-git clone https://github.com/NuCl34R/computer-use-linux.git
-cd computer-use-linux
+git clone https://github.com/NuCl34R/linux-computer-use.git
+cd linux-computer-use
 ./install.sh --dry-run
 ./install.sh
 ~/.local/bin/linux-computer-use doctor
@@ -119,7 +119,7 @@ If you install a second harness using the same launcher, use `--update`; the sha
 
 </details>
 
-A checksummed source archive is also available in the [0.2.0 preview release](https://github.com/NuCl34R/computer-use-linux/releases/tag/v0.2.0). Extract it and run `./install.sh` from its directory; the installer does not require Git metadata.
+A checksummed source archive is also available in the [0.2.0 preview release](https://github.com/NuCl34R/linux-computer-use/releases/tag/v0.2.0). Extract it and run `./install.sh` from its directory; the installer does not require Git metadata.
 
 ## Give your agent a desktop
 
@@ -244,7 +244,7 @@ These are application-driven tests: actual GTK callbacks confirm text, clicks, s
 | Installer | **Passed locally** | Distribution routing, rollback, quoted paths, update/removal, native installed E2E |
 | GNOME / other host DEs / other atomic OS images | **Not individually certified** | Private runtime offers a portable route; current-desktop APIs vary |
 
-The initial 13-report baseline also includes CLI transport, standalone skill installation, repeated accessibility-tree churn, and EOF/SIGTERM/SIGKILL cleanup. See [the validation record](docs/VALIDATION.md), [machine-readable baseline](skills/linux-computer-use/references/validation-results.json), [verified Ubuntu CI record](docs/ci-validation.json), and [CI runs](https://github.com/NuCl34R/computer-use-linux/actions).
+The initial 13-report baseline also includes CLI transport, standalone skill installation, repeated accessibility-tree churn, and EOF/SIGTERM/SIGKILL cleanup. See [the validation record](docs/VALIDATION.md), [machine-readable baseline](skills/linux-computer-use/references/validation-results.json), [verified Ubuntu CI record](docs/ci-validation.json), and [CI runs](https://github.com/NuCl34R/linux-computer-use/actions).
 
 <details>
 <summary><strong>Open the real application captures</strong></summary>

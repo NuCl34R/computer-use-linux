@@ -16,14 +16,14 @@ Cette version `0.2.0` est une préversion : une base de treize rapports E2E pass
 Clonez le dépôt, puis vérifiez le plan d’installation détecté :
 
 ```sh
-gh repo clone NuCl34R/computer-use-linux
-cd computer-use-linux
+gh repo clone NuCl34R/linux-computer-use
+cd linux-computer-use
 ./install.sh --dry-run
 ./install.sh
 ~/.local/bin/linux-computer-use doctor
 ```
 
-`git clone https://github.com/NuCl34R/computer-use-linux.git` fonctionne aussi avec une authentification Git configurée. L’installation demande Python système 3.10+ et s’exécute avec votre utilisateur habituel.
+`git clone https://github.com/NuCl34R/linux-computer-use.git` fonctionne aussi avec une authentification Git configurée. L’installation demande Python système 3.10+ et s’exécute avec votre utilisateur habituel.
 
 L’installateur détecte la distribution, sa famille, le DE, Wayland/X11, l’architecture, Omarchy, les systèmes immuables, les bibliothèques natives, les compositeurs et Podman. Sur le SteamOS testé, il sélectionne KWin déjà présent, sans modification de l’OS.
 
